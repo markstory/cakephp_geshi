@@ -1,0 +1,7 @@
+h3. Geshi Helper Plugin
+
+This plugin provides a simple helper for adding GeSHI syntax highlighting to your application. This package does not include GeSHI.  It must be obtained from "http://qbnz.com/highlighter/":http://qbnz.com/highlighter/ separately and placed in one of your @vendors@ folders. Place this plugin into a @geshi@ directory on your plugin paths. To include the helper use 
+
+	var $helpers = array('Geshi.Geshi');
+
+For more information on usage see "geshi helper for cakephp":http://mark-story.com/posts/view/geshi-helper-for-cakephp

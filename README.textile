@@ -1,7 +1,20 @@
 h3. Geshi Helper Plugin
 
-This plugin provides a simple helper for adding GeSHI syntax highlighting to your application. This package does not include GeSHI.  It must be obtained from "http://qbnz.com/highlighter/":http://qbnz.com/highlighter/ separately and placed in one of your @vendors@ folders. Place this plugin into a @geshi@ directory on your plugin paths. To include the helper use 
+This plugin provides a simple helper for adding GeSHI syntax highlighting to your application. This package does not include GeSHI.  It must be obtained from "http://qbnz.com/highlighter/":http://qbnz.com/highlighter/ separately.
+
+h3. Installation
+
+Either clone the repository or download a package and place it in a @geshi@ directory in one of your plugin paths.  Then download and "GeSHI":http://sourceforge.net/projects/geshi/files/ and place it in one of your @vendors@ folders, in a @geshi@ directory.
+
+h3. Usage
+
+To use the helper, include the helper in your controller:
 
 	var $helpers = array('Geshi.Geshi');
 
-For more information on usage see "geshi helper for cakephp":http://mark-story.com/posts/view/geshi-helper-for-cakephp
+In your views you can use @$this->Geshi->highlight($text);@ to highlight a block of text inside some HTML. By default the helper will highlight any @<pre>@ block and convert it into highlighted code.
+
+
+h3. License
+
+This code is licensed under the MIT License.

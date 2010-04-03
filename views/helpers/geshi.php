@@ -7,10 +7,11 @@
  *
  * @author Mark story
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
- * Copyright 2008 Mark Story 
- * 823 millwood rd. #3 
+ * Copyright 2008-2010 Mark Story 
+ * 
+ * 694B The Queensway
  * toronto, ontario
- * M4G 1W3, Canada
+ * M8Y 1K9, Canada
  * 
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
@@ -19,26 +20,33 @@ App::import('Vendor', 'geshi/geshi');
 
 class GeshiHelper extends AppHelper {
 /**
+ * Path the configuration file can be found on.
+ *
+ * @var string
+ */
+	public $configPath = CONFIGS;
+
+/**
  * The Container Elements that could contain highlightable code
  *
  * @var array
  **/
 	public $validContainers = array('pre');
-	
+
 /**
  * Replace containers with divs to increase validation
  *
  * @var string
  */
 	public $containerMap = array('pre' => array('div class="code"', 'div'));
-	
+
 /**
  * The languages you want to highlight.
  *
  * @var array
  **/
 	public $validLanguages = array('css', 'html', 'php', 'javascript', 'python', 'sql');
-	
+
 /**
  * Default language to use if no valid language is found.  leave null to require a language attribute
  * to be set on each container.
@@ -46,7 +54,7 @@ class GeshiHelper extends AppHelper {
  * @var mixed  false for no default language, String for the default language
  **/
 	public $defaultLanguage = false;
-	
+
 /**
  * The Attribute use for finding the code Language. 
  * 
@@ -55,21 +63,30 @@ class GeshiHelper extends AppHelper {
  * @var string
  **/
 	public $langAttribute = 'lang';
-	
+
 /**
  * GeSHi Instance
  *
  * @var object
  **/
 	protected $_geshi = null;
-	
+
 /**
  * Show the Button that can be used with JS to switch to plain text.
  *
  * @var bool
  */	
 	public $showPlainTextButton = true;
-	
+
+/**
+ * Highlight a block of HTML containing defined blocks.  Converts blocks from plain text
+ * into highlighted code.
+ * 
+ *
+ * @param string $htmlString 
+ * @return void
+ * @author Mark Story
+ */
 	function highlight( $htmlString ) {
 		$tags = implode('|', $this->validContainers);
 		//yummy regex
@@ -121,7 +138,7 @@ class GeshiHelper extends AppHelper {
 				$this->_geshi->set_language($lang);
 			}
 			$highlighted = $this->_geshi->parse_code();
-			return $openTag . $highlighted . $closeTag;	   	
+			return $openTag . $highlighted . $closeTag;
 		}
 		return $openTag . $code . $closeTag;
 	}
@@ -147,8 +164,8 @@ class GeshiHelper extends AppHelper {
  * @return void
  **/
 	private function __configureInstance($geshi) {
-		if (file_exists( CONFIGS . 'geshi.php')) {
-			include CONFIGS .'geshi.php';
+		if (file_exists($this->configPath . 'geshi.php')) {
+			include $this->configPath . 'geshi.php';
 		}
 	}
 } // END class geshiHelper extends AppHelper

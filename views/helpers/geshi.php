@@ -168,5 +168,4 @@ class GeshiHelper extends AppHelper {
 			include $this->configPath . 'geshi.php';
 		}
 	}
-} // END class geshiHelper extends AppHelper
-?>
+} 

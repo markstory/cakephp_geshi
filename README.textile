@@ -4,7 +4,7 @@ This plugin provides a simple helper for adding GeSHI syntax highlighting to you
 
 h3. Installation
 
-Either clone the repository or download a package and place it in a @geshi@ directory in one of your plugin paths.  Then download and "GeSHI":http://sourceforge.net/projects/geshi/files/ and place it in one of your @vendors@ folders, in a @geshi@ directory.
+Either clone the repository or download a package and place it in a @geshi@ directory in one of your plugin paths.  Then download and "GeSHI":http://sourceforge.net/projects/geshi/files/ and place it in one of your @vendors@ folders, in a @geshi@ directory.  This code has been tested with GeSHI 1.0.8.4
 
 h3. Usage
 
@@ -14,6 +14,9 @@ To use the helper, include the helper in your controller:
 
 In your views you can use @$this->Geshi->highlight($text);@ to highlight a block of text inside some HTML. By default the helper will highlight any @<pre>@ block and convert it into highlighted code.
 
+h4. Configuration
+
+You can configure the GeSHI instance by creating a @geshi.php@ file in your @app/config@ directory.  This file should contain the code/method calls to configure the @$geshi@ object.  An example an be found in @tests/cases/geshi.php@
 
 h3. License
 

@@ -1,23 +1,41 @@
 h3. Geshi Helper Plugin
 
-This plugin provides a simple helper for adding GeSHI syntax highlighting to your application. This package does not include GeSHI.  It must be obtained from "http://qbnz.com/highlighter/":http://qbnz.com/highlighter/ separately.
+This plugin provides a simple helper for adding GeSHI syntax highlighting to
+your application.
 
 h3. Installation
 
-Either clone the repository or download a package and place it in a @geshi@ directory in one of your plugin paths.  Then download and "GeSHI":http://sourceforge.net/projects/geshi/files/ and place it in one of your @vendors@ folders, in a @geshi@ directory.  This code has been tested with GeSHI 1.0.8.4
+Either clone the repository or download a package and place it in a @Geshi@
+directory in one of your plugin paths.  For example @app/Plugin/Geshi@.
 
 h3. Usage
 
 To use the helper, include the helper in your controller:
 
-	var $helpers = array('Geshi.Geshi');
+	public $helpers = array('Geshi.Geshi');
 
-In your views you can use @$this->Geshi->highlight($text);@ to highlight a block of text inside some HTML. By default the helper will highlight any @<pre>@ block and convert it into highlighted code.
+In your views you can use @$this->Geshi->highlight($html);@ to highlight
+a block of text inside some HTML. By default the helper will highlight any
+@<pre>@ block and convert it into highlighted code.
+
+You can indicate the language of the text in a @<pre>@ block by setting the lang
+attribute.  For example:
+
+	<pre lang="php">
+	<?php
+	echo 'hi'
+	</pre>
+
+Will be highlight as php code.
 
 h4. Configuration
 
-You can configure the GeSHI instance by creating a @geshi.php@ file in your @app/config@ directory.  This file should contain the code/method calls to configure the @$geshi@ object.  An example an be found in @tests/cases/geshi.php@
+You can configure the GeSHI instance by creating a @geshi.php@ file in your
+@app/Config@ directory.  This file should contain the code/method calls to
+configure the @$geshi@ object.  An example an be found in
+@Test/Case/geshi.php@
 
 h3. License
 
 This code is licensed under the MIT License.
+GeSHI is licensed under the GPLv2 License.

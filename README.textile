@@ -14,9 +14,12 @@ To use the helper, include the helper in your controller:
 
 	public $helpers = array('Geshi.Geshi');
 
-In your views you can use @$this->Geshi->highlight($html);@ to highlight
-a block of text inside some HTML. By default the helper will highlight any
-@<pre>@ block and convert it into highlighted code.
+h4. Methods
+
+**highlight($html)**
+
+This method will scan HTML for @<pre>@ blocks with a known lang attribute.  This
+method is good for highlighting code samples in blog posts, or wiki pages.
 
 You can indicate the language of the text in a @<pre>@ block by setting the lang
 attribute.  For example:
@@ -27,6 +30,11 @@ attribute.  For example:
 	</pre>
 
 Will be highlight as php code.
+
+**highlightText($text, $language)**
+
+This method will highlight @$text@ in @$language@.  Use this method to 
+highlight text in any language GeSHI supports.
 
 h4. Configuration
 

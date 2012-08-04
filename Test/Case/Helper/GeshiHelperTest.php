@@ -1,11 +1,14 @@
 <?php
-App::import('Helper', 'Geshi.Geshi');
+App::uses('View', 'View');
+App::uses('GeshiHelper', 'Geshi.View/Helper');
 
-class GeshiTestCase extends CakeTestCase {
+class GeshiHelperTest extends CakeTestCase {
 
 	function setUp() {
 		parent::setUp();
-		$this->geshi = new GeshiHelper();
+
+		$view = $this->getMock('View');
+		$this->geshi = new GeshiHelper($view);
 		$this->geshi->configPath = dirname(dirname(dirname(__FILE__))) . DS;
 	}
 

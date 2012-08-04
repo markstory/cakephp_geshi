@@ -11,15 +11,16 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  */
-App::import('Vendor', 'geshi/geshi');
+App::uses('geshi', 'Geshi.Vendor');
 
 class GeshiHelper extends AppHelper {
+
 /**
  * Path the configuration file can be found on.
  *
  * @var string
  */
-	public $configPath = CONFIGS;
+	public $configPath;
 
 /**
  * The Container Elements that could contain highlightable code
@@ -122,9 +123,8 @@ class GeshiHelper extends AppHelper {
 		}
 
 		if ((bool)$lang) {
-			//get instance or use stored instance
 			if ($this->_geshi == null) {
-				$geshi = new GeSHI(trim($code), $lang);
+				$geshi = new geshi(trim($code), $lang);
 				$this->_configureInstance($geshi);
 				$this->_geshi = $geshi;
 			} else {
@@ -161,6 +161,9 @@ class GeshiHelper extends AppHelper {
  * @return void
  */
 	protected function _configureInstance($geshi) {
+		if (empty($this->configPath)) {
+			$this->configPath = APP . 'Config/';
+		}
 		if (file_exists($this->configPath . 'geshi.php')) {
 			include $this->configPath . 'geshi.php';
 		}

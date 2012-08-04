@@ -4,15 +4,12 @@ App::import('Helper', 'Geshi.Geshi');
 class GeshiTestCase extends CakeTestCase {
 
 	function setUp() {
-		ClassRegistry::flush();
-	}
-
-	function startTest() {
+		parent::setUp();
 		$this->geshi = new GeshiHelper();
 		$this->geshi->configPath = dirname(dirname(dirname(__FILE__))) . DS;
 	}
 
-	function endTest() {
+	function tearDown() {
 		unset($this->geshi);
 	}
 /**
@@ -20,7 +17,7 @@ class GeshiTestCase extends CakeTestCase {
  *
  * @access public
  * @return void
- **/
+ */
 	function testHighlight() {
 		$this->geshi->showPlainTextButton = false;
 
@@ -221,5 +218,5 @@ class GeshiTestCase extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 	}
+
 }
-?>

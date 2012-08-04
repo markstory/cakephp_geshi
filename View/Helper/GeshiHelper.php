@@ -41,7 +41,10 @@ class GeshiHelper extends AppHelper {
  *
  * @var array
  */
-	public $validLanguages = array('css', 'html', 'php', 'javascript', 'python', 'sql');
+	public $validLanguages = array(
+		'css', 'html', 'php', 'javascript', 'python', 'sql',
+		'ruby', 'coffeescript', 'bash',
+	);
 
 /**
  * Default language to use if no valid language is found.  leave null to require a language attribute

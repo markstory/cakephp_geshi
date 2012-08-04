@@ -4,7 +4,7 @@ App::uses('GeshiHelper', 'Geshi.View/Helper');
 
 class GeshiHelperTest extends CakeTestCase {
 
-	function setUp() {
+	public function setUp() {
 		parent::setUp();
 
 		$view = $this->getMock('View');
@@ -12,16 +12,18 @@ class GeshiHelperTest extends CakeTestCase {
 		$this->geshi->configPath = dirname(dirname(dirname(__FILE__))) . DS;
 	}
 
-	function tearDown() {
+	public function tearDown() {
+		parent::tearDown();
 		unset($this->geshi);
 	}
+
 /**
  * test basic highlighting
  *
  * @access public
  * @return void
  */
-	function testHighlight() {
+	public function testHighlight() {
 		$this->geshi->showPlainTextButton = false;
 
 		//simple one code block
@@ -97,7 +99,7 @@ class GeshiHelperTest extends CakeTestCase {
 						array('span' => array('class' => "kw1")), 'echo', '/span',
 						array('span' => array('class' => "re0")), '$foo', '/span',
 						array('span' => array('class' => "sy0")), '=', '/span',
-						array('span' => array('class' => "st0")), '"foo"', '/span', 
+						array('span' => array('class' => "st0")), '&quot;foo&quot;', '/span', 
 						array('span' => array('class' => "sy0")), ';', '/span',
 						array('span' => array('class' => "sy1")), '?&gt;', '/span',
 					'/div',
@@ -105,8 +107,7 @@ class GeshiHelperTest extends CakeTestCase {
 			'/ol',
 			'/div',
 		);
-		//$this->assertTags($result, $expected);
-
+		$this->assertTags($result, $expected);
 
 		//more than one valid code block container
 		$this->geshi->validContainers = array('pre', 'code');
@@ -165,8 +166,8 @@ class GeshiHelperTest extends CakeTestCase {
  *
  * @access public
  * @return void
- **/
-	function testPlainTextButton() {
+ */
+	public function testPlainTextButton() {
 		//simple one code block
 		$text = '<p>This is some text</p><pre lang="php"><?php echo $foo = "foo"; ?></pre><p>More text</p>';
 		$result = $this->geshi->highlight($text);
@@ -193,7 +194,7 @@ class GeshiHelperTest extends CakeTestCase {
 		$this->assertTags($result, $expected);
 	}
 
-	function testNoTagReplacement() {
+	public function testNoTagReplacement() {
 		//simple one code block
 		$this->geshi->showPlainTextButton = false;
 		$this->geshi->containerMap = array();
@@ -218,6 +219,23 @@ class GeshiHelperTest extends CakeTestCase {
 			'/ol',
 			'/pre',
 			'<p', 'More text', '/p'
+		);
+		$this->assertTags($result, $expected);
+	}
+
+	public function testHighlightText() {
+		$result = $this->geshi->highlightText("<?php echo 'test';", 'php');
+		$expected = array(
+			array('ol' => array("class" => "php")), 
+				array('li' => array('class' => "li1")),
+				array("div" => array('class' => "de1")),
+					array("span" => array("class" => "kw2")), '&lt;?php', '/span',
+					array('span' => array('class' => "kw1")), 'echo', '/span',
+					array('span' => array('class' => "st_h")), "'test'", '/span',
+					array('span' => array('class' => "sy0")), ';', '/span',
+				'/div',
+				'/li',
+			'/ol',
 		);
 		$this->assertTags($result, $expected);
 	}

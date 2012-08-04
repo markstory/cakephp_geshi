@@ -81,7 +81,6 @@ class GeshiHelper extends AppHelper {
  * Highlight a block of HTML containing defined blocks.  Converts blocks from plain text
  * into highlighted code.
  *
- *
  * @param string $htmlString
  * @return void
  */
@@ -96,9 +95,34 @@ class GeshiHelper extends AppHelper {
 			matches[3] = value of lang attribute
 			matches[4] = text to be highlighted
 			matches[5] = end tag
-		*/	
+		*/
 		$html = preg_replace_callback($pattern, array($this, '_processCodeBlock'), $htmlString);
 		return $this->output( $html );
+	}
+
+/**
+ * Highlight all the provided text as a given language.
+ *
+ * @param string $text The text to highight.
+ * @param string $language The language to highlight as.
+ * @return string Highlighted HTML.
+ */
+	public function highlightText($text, $language) {
+		$this->_getGeshi();
+		$this->_geshi->set_source($text);
+		$this->_geshi->set_language($language);
+		return $this->_geshi->parse_code();
+	}
+
+/**
+ * Get the instance of GeSHI used by the helper.
+ */
+	protected function _getGeshi() {
+		if (!$this->_geshi) {
+			$this->_geshi = new geshi();
+			$this->_configureInstance($this->_geshi);
+		}
+		return $this->_geshi;
 	}
 
 /**
@@ -110,9 +134,10 @@ class GeshiHelper extends AppHelper {
 	protected function _processCodeBlock($matches) {
 		list($block, $openTag, $tagName, $lang, $code, $closeTag) = $matches;
 		unset($matches);
-		//check language
+
+		// check language
 		$lang = $this->validLang($lang);
-		$code = html_entity_decode($code, ENT_QUOTES); //decode text in code block as GeSHi will re-encode it.
+		$code = html_entity_decode($code, ENT_QUOTES); // decode text in code block as GeSHi will re-encode it.
 
 		if (isset($this->containerMap[$tagName])) {
 			$patt = '/' . preg_quote($tagName) . '/';
@@ -125,16 +150,8 @@ class GeshiHelper extends AppHelper {
 			$openTag = $button . $openTag;
 		}
 
-		if ((bool)$lang) {
-			if ($this->_geshi == null) {
-				$geshi = new geshi(trim($code), $lang);
-				$this->_configureInstance($geshi);
-				$this->_geshi = $geshi;
-			} else {
-				$this->_geshi->set_source(trim($code));
-				$this->_geshi->set_language($lang);
-			}
-			$highlighted = $this->_geshi->parse_code();
+		if ($lang) {
+			$highlighted = $this->highlightText(trim($code), $lang);
 			return $openTag . $highlighted . $closeTag;
 		}
 		return $openTag . $code . $closeTag;

@@ -145,7 +145,7 @@ class GeshiHelper extends AppHelper {
 			$code[] = $line[1];
 		}
 		$template = <<<HTML
-<table class="code">
+<table class="code" cellspacing="0" cellpadding="0">
 <tbody>
 	<tr><td class="code-numbers">%s</td>
 	<td class="code-block">%s</td></tr>

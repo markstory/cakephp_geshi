@@ -248,7 +248,7 @@ echo 1 + 1;
 CODE;
 		$result = $this->geshi->highlightAsTable($text, 'php');
 		$expected = array(
-			array('table' => array('class' => 'code')),
+			array('table' => array('class' => 'code', 'cellspacing' => 0, 'cellpadding' => 0)),
 			'<tbody',
 			'<tr',
 			array('td' => array('class' => 'code-numbers')),

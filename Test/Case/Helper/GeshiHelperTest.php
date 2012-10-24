@@ -240,4 +240,44 @@ class GeshiHelperTest extends CakeTestCase {
 		$this->assertTags($result, $expected);
 	}
 
+	public function testHighlightAsTable() {
+		$text = <<<CODE
+<?php
+echo 'test';
+echo 1 + 1;
+CODE;
+		$result = $this->geshi->highlightAsTable($text, 'php');
+		$expected = array(
+			array('table' => array('class' => 'code')),
+			'<tbody',
+			'<tr',
+			array('td' => array('class' => 'code-numbers')),
+				array('div' => array('class' => 'de1')), 1, '/div',
+				array('div' => array('class' => 'de1')), 2, '/div',
+				array('div' => array('class' => 'de1')), 3, '/div',
+			'/td',
+			array('td' => array('class' => 'code-block')),
+				array("div" => array('class' => "de1")),
+					array("span" => array("class" => "kw2")), '&lt;?php', '/span',
+				'/div',
+				array('div' => array('class' => 'de1')),
+					array('span' => array('class' => "kw1")), 'echo', '/span',
+					array('span' => array('class' => "st_h")), "'test'", '/span',
+					array('span' => array('class' => "sy0")), ';', '/span',
+				'/div',
+				array('div' => array('class' => 'de1')),
+					array('span' => array('class' => "kw1")), 'echo', '/span',
+					array('span' => array('class' => "nu0")), '1', '/span',
+					array('span' => array('class' => "sy0")), '+', '/span',
+					array('span' => array('class' => "nu0")), '1', '/span',
+					array('span' => array('class' => "sy0")), ';', '/span',
+				'/div',
+			'/td',
+			'/tr',
+			'/tbody',
+			'/table',
+		);
+		$this->assertTags($result, $expected);
+	}
+
 }

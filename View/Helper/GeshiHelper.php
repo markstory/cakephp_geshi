@@ -115,6 +115,51 @@ class GeshiHelper extends AppHelper {
 	}
 
 /**
+ * Highlight all the provided text as a given language.
+ * Formats the results into an HTML table.  This makes handling wide blocks
+ * of code in a narrow page/space possible.
+ *
+ * @param string $text The text to highight.
+ * @param string $language The language to highlight as.
+ * @return string Highlighted HTML.
+ */
+	public function highlightAsTable($text, $language) {
+		$this->_getGeshi();
+		$this->_geshi->set_source($text);
+		$this->_geshi->set_language($language);
+		$this->_geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+		$highlight = $this->_geshi->parse_code();
+		return $this->_convertToTable($highlight);
+	}
+
+	protected function _convertToTable($highlight) {
+		preg_match_all(
+			'#<li\s*class\="li\d">(.*)</li>#',
+			$highlight,
+			$lines,
+			PREG_SET_ORDER
+		);
+		$numbers = $code = array();
+		foreach ($lines as $i => $line) {
+			$numbers[] = sprintf('<div class="de1">%d</div>', $i + 1);
+			$code[] = $line[1];
+		}
+		$template = <<<HTML
+<table class="code">
+<tbody>
+	<tr><td class="code-numbers">%s</td>
+	<td class="code-block">%s</td></tr>
+</tbody>
+</table>
+HTML;
+		return sprintf(
+			$template,
+			implode("\n", $numbers),
+			implode("\n", $code)
+		);
+	}
+
+/**
  * Get the instance of GeSHI used by the helper.
  */
 	protected function _getGeshi() {

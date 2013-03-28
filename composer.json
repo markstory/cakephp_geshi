@@ -1,5 +1,5 @@
 {
-	"name": "markstory/geshi",
+	"name": "markstory/cakephp_geshi",
 	"description": "CakePHP plugin that integrates with Geshi Syntax highlighter.",
 	"type": "cakephp-plugin",
 	"keywords": ["cakephp", "geshi", "helper", "highlighting"],

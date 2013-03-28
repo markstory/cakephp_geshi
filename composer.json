@@ -1,0 +1,23 @@
+{
+	"name": "markstory/geshi",
+	"description": "CakePHP plugin that integrates with Geshi Syntax highlighter.",
+	"type": "cakephp-plugin",
+	"keywords": ["cakephp", "geshi", "helper", "highlighting"],
+	"homepage": "https://github.com/markstory/cakephp_geshi",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Mark Story",
+			"homepage": "http://mark-story.com",
+			"role": "Author"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/markstory/cakephp_geshi/issues",
+		"source": "https://github.com/markstory/cakephp_geshi"
+	},
+	"require": {
+		"php": ">=5.3.0",
+		"composer/installers": "*"
+	}
+}

@@ -169,6 +169,33 @@ HTML;
 	}
 
 /**
+ * Highlight all the provided text as a given language,
+ * and includes the style sheet.
+ *
+ * @param string $text The text to highight.
+ * @param string $language The language to highlight as.
+ * @return string Highlighted HTML.
+ */
+	public function highlightTextWithStyleSheet($text, $language) {
+		$this->_getGeshi();
+		$this->_geshi->set_source($text);
+		$this->_geshi->set_language($language);
+		$template = <<<HTML
+<style type="text/css">
+<!--
+%s
+-->
+</style>
+%s
+HTML;
+		return sprintf(
+			$template,
+			$this->_geshi->get_stylesheet(),
+			$this->_geshi->parse_code()
+		);
+	}
+
+/**
  * Get the instance of GeSHI used by the helper.
  */
 	protected function _getGeshi() {

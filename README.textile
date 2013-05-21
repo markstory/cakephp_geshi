@@ -39,6 +39,11 @@ Will be highlight as php code.
 This method will highlight @$text@ in @$language@.  Use this method to 
 highlight text in any language GeSHI supports.
 
+**highlightTextWithStyleSheet($text, $language)**
+
+This method is as above, but also generates inline CSS to support GeSHi's
+ability to do so.
+
 h4. Configuration
 
 You can configure GeSHI's default features by changing the public $features

@@ -11,16 +11,25 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  */
-App::uses('geshi', 'Geshi.Vendor');
+ 
+/**
+ * Using App::Import instead of App::uses exposes Geshi's constants.
+ *
+ */
+App::import('Plugin', 'Geshi' .DS . 'Vendor' .DS . 'geshi');
 
 class GeshiHelper extends AppHelper {
 
 /**
- * Path the configuration file can be found on.
+ * Geshi default features this instance will use. Configure your own with
+ * 		$this->Geshi->features = array(...)
+ * in your view or controller.
  *
- * @var string
+ * @var array
  */
-	public $configPath;
+	public $features = array(	'set_header_type' => array( GESHI_HEADER_PRE),
+								'enable_line_numbers' => array(GESHI_FANCY_LINE_NUMBERS, 2),
+							);
 
 /**
  * The Container Elements that could contain highlightable code
@@ -55,7 +64,7 @@ class GeshiHelper extends AppHelper {
 	public $defaultLanguage = false;
 
 /**
- * The Attribute use for finding the code Language. 
+ * The Attribute use for finding the code Language.
  *
  * Common choices are lang and class
  *
@@ -165,8 +174,9 @@ HTML;
 	protected function _getGeshi() {
 		if (!$this->_geshi) {
 			$this->_geshi = new geshi();
-			$this->_configureInstance($this->_geshi);
 		}
+		// re-configure for each use so features can change
+		$this->_configureInstance($this->_geshi);
 		return $this->_geshi;
 	}
 
@@ -219,18 +229,16 @@ HTML;
 	}
 
 /**
- * Configure a geshi Instance the way we want it. 
- * app/config/geshi.php
+ * Configure a geshi Instance the way we want it.
+ * 		$this->Geshi->features = array(...)
  *
  * @param Geshi $geshi
  * @return void
  */
 	protected function _configureInstance($geshi) {
-		if (empty($this->configPath)) {
-			$this->configPath = APP . 'Config/';
-		}
-		if (file_exists($this->configPath . 'geshi.php')) {
-			include $this->configPath . 'geshi.php';
+		foreach($this->features as $key => $value) {
+			call_user_func_array(array(&$geshi, $key), $value);
 		}
 	}
-} 
+
+}

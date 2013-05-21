@@ -8,6 +8,9 @@ h3. Installation
 Either clone the repository or download a package and place it in a @Geshi@
 directory in one of your plugin paths.  For example @app/Plugin/Geshi@.
 
+Don't forget that starting with CakePHP 2.0, you must load plugins manually
+in @app/Config/bootstrap.php@. For example, CakePlugin::loadAll()
+
 h3. Usage
 
 To use the helper, include the helper in your controller:
@@ -38,10 +41,16 @@ highlight text in any language GeSHI supports.
 
 h4. Configuration
 
-You can configure the GeSHI instance by creating a @geshi.php@ file in your
-@app/Config@ directory.  This file should contain the code/method calls to
-configure the @$geshi@ object.  An example an be found in
-@Test/Case/geshi.php@
+You can configure GeSHI's default features by changing the public $features
+variable in @app/Plugin/Geshi/View/Helper/GeshiHelper.php@.
+
+More interestingly you can configure GeSHI's features from within your views
+by accessing the $features variable so: $this->Geshi->features = array(...)
+
+$this->Geshi->features = array ( 'geshi_feature_name' => array ( geshi_parameter, list, values);
+
+Note: previous support for a single @geshi.php@ in you @app/Config@ directory
+has been dropped due to the limited flexibility that it offered.
 
 h3. License
 

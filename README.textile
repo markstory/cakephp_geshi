@@ -8,12 +8,29 @@ h3. Installation
 Either clone the repository or download a package and place it in a @Geshi@
 directory in one of your plugin paths.  For example @app/Plugin/Geshi@.
 
+Don't forget that starting with CakePHP 2.0, you must load plugins manually
+in @app/Config/bootstrap.php@. For example, CakePlugin::loadAll()
+
 h3. Usage
+
+h4. Use without Pre-configuration
 
 To use the helper, include the helper in your controller:
 
 	public $helpers = array('Geshi.Geshi');
+	
+h4. Use with Pre-configuration
 
+To use the helper and specify specific GeSHi features, use the options form
+of including helpers:
+
+	public $helpers = array('Geshi.Geshi' => array('set_header_type' => array( 'GESHI_FANCY_LINE_NUMBERS', 5 ) ));
+	
+Where the passed-in key is a GeSHi function name, and the passed-in values
+is an array of values for the function. Note that because GeSHi's own
+constants are out of scope at this point, you must quote named constants as
+shown above. GeshiHelper will resolve them for you.
+	
 h4. Methods
 
 **highlight($html)**
@@ -29,19 +46,33 @@ attribute.  For example:
 	echo 'hi'
 	</pre>
 
-Will be highlight as php code.
+Will be highlighted as php code.
 
 **highlightText($text, $language)**
 
 This method will highlight @$text@ in @$language@.  Use this method to 
 highlight text in any language GeSHI supports.
 
-h4. Configuration
+**highlightText($text, $language, $withStylesheet)**
 
-You can configure the GeSHI instance by creating a @geshi.php@ file in your
-@app/Config@ directory.  This file should contain the code/method calls to
-configure the @$geshi@ object.  An example an be found in
-@Test/Case/geshi.php@
+This is the same method as above, but if you specify true for the optional,
+third parameter then the helper will include the GeSHi-generated inline style
+sheet.
+
+h4. Use with Inline Configuration
+
+You can configure GeSHI's features from within your views
+by accessing the $features variable so: $this->Geshi->features = array(...)
+
+$this->Geshi->features = array( 'geshi_function_name' => array ( 'geshi_parameter', list, values);
+
+Note that GeSHI's constants _are_ in scope here, and so quoting parameter
+values is optional from within views.
+
+h4. Previous Versions' Configuration
+
+Note: previous support for a single @geshi.php@ in you @app/Config@ directory
+has been dropped due to the limited flexibility that it offered.
 
 h3. License
 

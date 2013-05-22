@@ -13,7 +13,8 @@
  */
  
 /**
- * Using App::Import instead of App::uses exposes Geshi's constants.
+ * Using App::Import instead of App::uses exposes Geshi's constants
+ * to the view.
  *
  */
 App::import('Plugin', 'Geshi' .DS . 'Vendor' .DS . 'geshi');
@@ -21,15 +22,14 @@ App::import('Plugin', 'Geshi' .DS . 'Vendor' .DS . 'geshi');
 class GeshiHelper extends AppHelper {
 
 /**
- * Geshi default features this instance will use. Configure your own with
+ * GeSHi features this instance will use. Set GeSHi options
  * 		$this->Geshi->features = array(...)
- * in your view or controller.
+ * in your view and/or in your controller $helpers setting
+ * 		public $helpers = array('Geshi.Geshi' => array(	'set_header_type' => array( 2 ), ));
  *
  * @var array
  */
-	public $features = array(	'set_header_type' => array( GESHI_HEADER_PRE),
-								'enable_line_numbers' => array(GESHI_FANCY_LINE_NUMBERS, 2),
-							);
+	public $features = array();
 
 /**
  * The Container Elements that could contain highlightable code
@@ -87,6 +87,18 @@ class GeshiHelper extends AppHelper {
 	public $showPlainTextButton = true;
 
 /**
+ * Set the default features if any specified in $helpers
+ * 
+ * @param string $view
+ * @param array $settings
+ * @return void
+ */
+    public function __construct(View $view, $settings = array()) {
+		$this->features = $settings;
+        parent::__construct($view, $settings);
+    }
+
+ /**
  * Highlight a block of HTML containing defined blocks.  Converts blocks from plain text
  * into highlighted code.
  *
@@ -116,11 +128,11 @@ class GeshiHelper extends AppHelper {
  * @param string $language The language to highlight as.
  * @return string Highlighted HTML.
  */
-	public function highlightText($text, $language) {
+	public function highlightText($text, $language, $withStylesheet = false) {
 		$this->_getGeshi();
 		$this->_geshi->set_source($text);
 		$this->_geshi->set_language($language);
-		return $this->_geshi->parse_code();
+		return !$withStylesheet ? $this->_geshi->parse_code() : $this->_includeStylesheet() . $this->_geshi->parse_code();
 	}
 
 /**
@@ -169,40 +181,12 @@ HTML;
 	}
 
 /**
- * Highlight all the provided text as a given language,
- * and includes the style sheet.
- *
- * @param string $text The text to highight.
- * @param string $language The language to highlight as.
- * @return string Highlighted HTML.
- */
-	public function highlightTextWithStyleSheet($text, $language) {
-		$this->_getGeshi();
-		$this->_geshi->set_source($text);
-		$this->_geshi->set_language($language);
-		$template = <<<HTML
-<style type="text/css">
-<!--
-%s
--->
-</style>
-%s
-HTML;
-		return sprintf(
-			$template,
-			$this->_geshi->get_stylesheet(),
-			$this->_geshi->parse_code()
-		);
-	}
-
-/**
  * Get the instance of GeSHI used by the helper.
  */
 	protected function _getGeshi() {
 		if (!$this->_geshi) {
 			$this->_geshi = new geshi();
 		}
-		// re-configure for each use so features can change
 		$this->_configureInstance($this->_geshi);
 		return $this->_geshi;
 	}
@@ -264,8 +248,35 @@ HTML;
  */
 	protected function _configureInstance($geshi) {
 		foreach($this->features as $key => $value) {
-			call_user_func_array(array(&$geshi, $key), $value);
+			foreach($value as &$test) {
+				if (defined($test)) {
+					// convert strings to Geshi's constant values
+					// (exists possibility of name collisions)
+					$test = constant($test);
+				}
+			}
+			unset($test);
+			call_user_func_array(array($geshi, $key), $value);
 		}
+	}
+
+/**
+ * Include the GeSHi-generated inline stylesheet.
+ *
+ * @return string
+ */
+	protected function _includeStylesheet() {
+		$template = <<<HTML
+\n<style type="text/css">
+<!--
+%s
+-->
+</style>\n
+HTML;
+		return sprintf(
+			$template,
+			$this->_geshi->get_stylesheet()
+		);
 	}
 
 }

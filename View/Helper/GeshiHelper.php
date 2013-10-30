@@ -87,7 +87,7 @@ class GeshiHelper extends AppHelper {
 	public function highlight($htmlString) {
 		$tags = implode('|', $this->validContainers);
 		//yummy regex
-		$pattern = '#(<('. $tags .')[^>]'.$this->langAttribute.'=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
+		$pattern = '#(<(' . $tags . ')[^>]' . $this->langAttribute . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
 		/*
 			matches[0] = whole string
 			matches[1] = open tag including lang attribute
@@ -208,7 +208,7 @@ HTML;
  * @param string $lang Language
  * @return mixed.
  */
-	public function validLang($lang)  {
+	public function validLang($lang) {
 		if (in_array($lang, $this->validLanguages)) {
 			return $lang;
 		}

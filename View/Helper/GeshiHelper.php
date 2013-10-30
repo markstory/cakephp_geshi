@@ -1,4 +1,6 @@
 <?php
+App::uses('geshi', 'Geshi.Vendor');
+
 /**
  * Geshi Helper
  *
@@ -11,8 +13,6 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  */
-App::uses('geshi', 'Geshi.Vendor');
-
 class GeshiHelper extends AppHelper {
 
 /**
@@ -55,7 +55,7 @@ class GeshiHelper extends AppHelper {
 	public $defaultLanguage = false;
 
 /**
- * The Attribute use for finding the code Language. 
+ * The Attribute use for finding the code Language.
  *
  * Common choices are lang and class
  *
@@ -97,7 +97,7 @@ class GeshiHelper extends AppHelper {
 			matches[5] = end tag
 		*/
 		$html = preg_replace_callback($pattern, array($this, '_processCodeBlock'), $htmlString);
-		return $this->output( $html );
+		return $this->output($html);
 	}
 
 /**
@@ -219,7 +219,7 @@ HTML;
 	}
 
 /**
- * Configure a geshi Instance the way we want it. 
+ * Configure a geshi Instance the way we want it.
  * app/config/geshi.php
  *
  * @param Geshi $geshi
@@ -233,4 +233,5 @@ HTML;
 			include $this->configPath . 'geshi.php';
 		}
 	}
-} 
+
+}

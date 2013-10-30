@@ -73,7 +73,7 @@ class GeshiHelper extends AppHelper {
 /**
  * Show the Button that can be used with JS to switch to plain text.
  *
- * @var bool
+ * @var boolean
  */
 	public $showPlainTextButton = true;
 

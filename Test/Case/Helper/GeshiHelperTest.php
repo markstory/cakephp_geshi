@@ -18,9 +18,8 @@ class GeshiHelperTest extends CakeTestCase {
 	}
 
 /**
- * test basic highlighting
+ * Test basic highlighting
  *
- * @access public
  * @return void
  */
 	public function testHighlight() {
@@ -162,9 +161,8 @@ class GeshiHelperTest extends CakeTestCase {
 	}
 
 /**
- * test the inclusion of the toggle text button
+ * Test the inclusion of the toggle text button
  *
- * @access public
  * @return void
  */
 	public function testPlainTextButton() {

@@ -1,4 +1,6 @@
 <?php
+App::uses('geshi', 'Geshi.Vendor');
+
 /**
  * Geshi Helper
  *
@@ -11,8 +13,6 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  */
-App::uses('geshi', 'Geshi.Vendor');
-
 class GeshiHelper extends AppHelper {
 
 /**
@@ -55,7 +55,7 @@ class GeshiHelper extends AppHelper {
 	public $defaultLanguage = false;
 
 /**
- * The Attribute use for finding the code Language. 
+ * The Attribute use for finding the code Language.
  *
  * Common choices are lang and class
  *
@@ -73,7 +73,7 @@ class GeshiHelper extends AppHelper {
 /**
  * Show the Button that can be used with JS to switch to plain text.
  *
- * @var bool
+ * @var boolean
  */
 	public $showPlainTextButton = true;
 
@@ -87,7 +87,7 @@ class GeshiHelper extends AppHelper {
 	public function highlight($htmlString) {
 		$tags = implode('|', $this->validContainers);
 		//yummy regex
-		$pattern = '#(<('. $tags .')[^>]'.$this->langAttribute.'=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
+		$pattern = '#(<(' . $tags . ')[^>]' . $this->langAttribute . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
 		/*
 			matches[0] = whole string
 			matches[1] = open tag including lang attribute
@@ -97,7 +97,7 @@ class GeshiHelper extends AppHelper {
 			matches[5] = end tag
 		*/
 		$html = preg_replace_callback($pattern, array($this, '_processCodeBlock'), $htmlString);
-		return $this->output( $html );
+		return $this->output($html);
 	}
 
 /**
@@ -208,7 +208,7 @@ HTML;
  * @param string $lang Language
  * @return mixed.
  */
-	public function validLang($lang)  {
+	public function validLang($lang) {
 		if (in_array($lang, $this->validLanguages)) {
 			return $lang;
 		}
@@ -219,7 +219,7 @@ HTML;
 	}
 
 /**
- * Configure a geshi Instance the way we want it. 
+ * Configure a geshi Instance the way we want it.
  * app/config/geshi.php
  *
  * @param Geshi $geshi
@@ -233,4 +233,5 @@ HTML;
 			include $this->configPath . 'geshi.php';
 		}
 	}
-} 
+
+}

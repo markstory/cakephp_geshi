@@ -1,4 +1,6 @@
 <?php
+App::uses('geshi', 'Geshi.Vendor');
+
 /**
  * Geshi Helper
  *
@@ -11,14 +13,6 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  */
- 
-/**
- * Using App::Import instead of App::uses exposes Geshi's constants
- * to the view.
- *
- */
-App::import('Plugin', 'Geshi' .DS . 'Vendor' .DS . 'geshi');
-
 class GeshiHelper extends AppHelper {
 
 /**
@@ -82,7 +76,7 @@ class GeshiHelper extends AppHelper {
 /**
  * Show the Button that can be used with JS to switch to plain text.
  *
- * @var bool
+ * @var boolean
  */
 	public $showPlainTextButton = true;
 
@@ -108,7 +102,7 @@ class GeshiHelper extends AppHelper {
 	public function highlight($htmlString) {
 		$tags = implode('|', $this->validContainers);
 		//yummy regex
-		$pattern = '#(<('. $tags .')[^>]'.$this->langAttribute.'=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
+		$pattern = '#(<(' . $tags . ')[^>]' . $this->langAttribute . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
 		/*
 			matches[0] = whole string
 			matches[1] = open tag including lang attribute
@@ -118,7 +112,7 @@ class GeshiHelper extends AppHelper {
 			matches[5] = end tag
 		*/
 		$html = preg_replace_callback($pattern, array($this, '_processCodeBlock'), $htmlString);
-		return $this->output( $html );
+		return $this->output($html);
 	}
 
 /**
@@ -229,7 +223,7 @@ HTML;
  * @param string $lang Language
  * @return mixed.
  */
-	public function validLang($lang)  {
+	public function validLang($lang) {
 		if (in_array($lang, $this->validLanguages)) {
 			return $lang;
 		}
@@ -241,7 +235,7 @@ HTML;
 
 /**
  * Configure a geshi Instance the way we want it.
- * 		$this->Geshi->features = array(...)
+ * app/config/geshi.php
  *
  * @param Geshi $geshi
  * @return void
@@ -258,25 +252,6 @@ HTML;
 			unset($test);
 			call_user_func_array(array($geshi, $key), $value);
 		}
-	}
-
-/**
- * Include the GeSHi-generated inline stylesheet.
- *
- * @return string
- */
-	protected function _includeStylesheet() {
-		$template = <<<HTML
-\n<style type="text/css">
-<!--
-%s
--->
-</style>\n
-HTML;
-		return sprintf(
-			$template,
-			$this->_geshi->get_stylesheet()
-		);
 	}
 
 }

@@ -50,7 +50,7 @@ h3. Methods
 This method will scan HTML for @<pre>@ blocks with a known lang attribute. This
 method is good for highlighting code samples in blog posts or wiki pages.
 
-You can indicate the language of the text in a <@pre@> block by setting the lang
+You can indicate the language of the text in a @<pre>@ block by setting the lang
 attribute.  For example:
 
 	<pre lang="php">

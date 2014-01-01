@@ -1,6 +1,4 @@
 <?php
-App::uses('geshi', 'Geshi.Vendor');
-
 /**
  * Geshi Helper
  *
@@ -13,14 +11,33 @@ App::uses('geshi', 'Geshi.Vendor');
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  */
+
+/**
+ * Using App::Import instead of App::uses exposes Geshi's constants
+ * to the view.
+ *
+ */
+App::import('Plugin', 'Geshi' .DS . 'Vendor' .DS . 'geshi');
+
 class GeshiHelper extends AppHelper {
 
 /**
  * Path the configuration file can be found on.
+ * Configuration file will *not* be used if $features is set.
  *
  * @var string
  */
 	public $configPath;
+
+/**
+ * GeSHi features this instance will use. Set GeSHi options
+ * 		$this->Geshi->features = array(...)
+ * in your view and/or in your controller $helpers setting
+ * 		public $helpers = array('Geshi.Geshi' => array(	'set_header_type' => array( 2 ), ));
+ *
+ * @var array
+ */
+	public $features = array();
 
 /**
  * The Container Elements that could contain highlightable code
@@ -47,10 +64,10 @@ class GeshiHelper extends AppHelper {
 	);
 
 /**
- * Default language to use if no valid language is found.  leave null to require a language attribute
+ * Default language to use if no valid language is found. Leave null to require a language attribute
  * to be set on each container.
  *
- * @var mixed  false for no default language, String for the default language
+ * @var mixed false for no default language, String for the default language
  */
 	public $defaultLanguage = false;
 
@@ -78,7 +95,19 @@ class GeshiHelper extends AppHelper {
 	public $showPlainTextButton = true;
 
 /**
- * Highlight a block of HTML containing defined blocks.  Converts blocks from plain text
+ * Set the default features if any specified in $helpers
+ *
+ * @param string $view
+ * @param array $settings
+ * @return void
+ */
+	public function __construct(View $view, $settings = array()) {
+		$this->features = $settings;
+		parent::__construct($view, $settings);
+	}
+
+ /**
+ * Highlight a block of HTML containing defined blocks. Converts blocks from plain text
  * into highlighted code.
  *
  * @param string $htmlString
@@ -87,7 +116,7 @@ class GeshiHelper extends AppHelper {
 	public function highlight($htmlString) {
 		$tags = implode('|', $this->validContainers);
 		//yummy regex
-		$pattern = '#(<(' . $tags . ')[^>]' . $this->langAttribute . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
+		$pattern = '#(<(' . $tags . ')[^>]'.$this->langAttribute . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
 		/*
 			matches[0] = whole string
 			matches[1] = open tag including lang attribute
@@ -105,18 +134,19 @@ class GeshiHelper extends AppHelper {
  *
  * @param string $text The text to highight.
  * @param string $language The language to highlight as.
+ * @param boolean $withStylesheet If true will include GeSHi's generated stylesheet.
  * @return string Highlighted HTML.
  */
-	public function highlightText($text, $language) {
+	public function highlightText($text, $language, $withStylesheet = false) {
 		$this->_getGeshi();
 		$this->_geshi->set_source($text);
 		$this->_geshi->set_language($language);
-		return $this->_geshi->parse_code();
+		return !$withStylesheet ? $this->_geshi->parse_code() : $this->_includeStylesheet() . $this->_geshi->parse_code();
 	}
 
 /**
  * Highlight all the provided text as a given language.
- * Formats the results into an HTML table.  This makes handling wide blocks
+ * Formats the results into an HTML table. This makes handling wide blocks
  * of code in a narrow page/space possible.
  *
  * @param string $text The text to highight.
@@ -165,8 +195,8 @@ HTML;
 	protected function _getGeshi() {
 		if (!$this->_geshi) {
 			$this->_geshi = new geshi();
-			$this->_configureInstance($this->_geshi);
 		}
+		$this->_configureInstance($this->_geshi);
 		return $this->_geshi;
 	}
 
@@ -220,18 +250,52 @@ HTML;
 
 /**
  * Configure a geshi Instance the way we want it.
- * app/config/geshi.php
+ * 		$this->Geshi->features = array(...)
  *
  * @param Geshi $geshi
  * @return void
  */
 	protected function _configureInstance($geshi) {
-		if (empty($this->configPath)) {
-			$this->configPath = APP . 'Config/';
+		if (empty($this->features)) {
+			if (empty($this->configPath)) {
+				$this->configPath = APP . 'Config/';
+			}
+			if (file_exists($this->configPath . 'geshi.php')) {
+				include $this->configPath . 'geshi.php';
+			}
+		} else {
+			foreach ($this->features as $key => $value) {
+				foreach ($value as &$test) {
+					if (defined($test)) {
+						// convert strings to Geshi's constant values
+						// (exists possibility of name collisions)
+						$test = constant($test);
+					}
+				}
+				unset($test);
+				call_user_func_array(array($geshi, $key), $value);
+			}
 		}
-		if (file_exists($this->configPath . 'geshi.php')) {
-			include $this->configPath . 'geshi.php';
-		}
+
+	}
+
+/**
+ * Include the GeSHi-generated inline stylesheet.
+ *
+ * @return string
+ */
+	protected function _includeStylesheet() {
+		$template = <<<HTML
+\n<style type="text/css">
+<!--
+%s
+-->
+</style>\n
+HTML;
+		return sprintf(
+			$template,
+			$this->_geshi->get_stylesheet()
+		);
 	}
 
 }

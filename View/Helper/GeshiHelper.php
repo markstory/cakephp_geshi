@@ -17,7 +17,11 @@
  * to the view.
  *
  */
-App::import('Plugin', 'Geshi' .DS . 'Vendor' .DS . 'geshi');
+App::import(
+	'Vendor',
+	'Geshi.geshi',
+	array('file' => 'geshi.php')
+	);
 
 class GeshiHelper extends AppHelper {
 

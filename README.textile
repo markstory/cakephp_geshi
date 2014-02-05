@@ -86,7 +86,7 @@ h2. Configure in your views
 You can configure GeSHI's features from within your views
 by accessing the @$features@ variable so: @$this->Geshi->features = array(...)@, for example:
 
-@$this->Geshi->features = array( 'geshi_function_name' => array ( 'geshi_parameter', list, values);@
+@$this->Geshi->features = array('geshi_function_name' => array('geshi_parameter', list, values);@
 
 Note that GeSHI's constants _are_ in scope here, and so quoting parameter
 values is optional from within views.

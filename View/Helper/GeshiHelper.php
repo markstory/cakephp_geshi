@@ -15,13 +15,8 @@
 /**
  * Using App::Import instead of App::uses exposes Geshi's constants
  * to the view.
- *
  */
-App::import(
-	'Vendor',
-	'Geshi.geshi',
-	array('file' => 'geshi.php')
-	);
+App::import('Vendor', 'Geshi.geshi', array('file' => 'geshi.php'));
 
 class GeshiHelper extends AppHelper {
 
@@ -35,9 +30,12 @@ class GeshiHelper extends AppHelper {
 
 /**
  * GeSHi features this instance will use. Set GeSHi options
- * 		$this->Geshi->features = array(...)
+ *
+ *     $this->Geshi->features = array(...)
+ *
  * in your view and/or in your controller $helpers setting
- * 		public $helpers = array('Geshi.Geshi' => array(	'set_header_type' => array( 2 ), ));
+ *
+ *     public $helpers = array('Geshi.Geshi' => array('set_header_type' => array( 2 ), ));
  *
  * @var array
  */
@@ -254,7 +252,8 @@ HTML;
 
 /**
  * Configure a geshi Instance the way we want it.
- * 		$this->Geshi->features = array(...)
+ *
+ *     $this->Geshi->features = array(...)
  *
  * @param Geshi $geshi
  * @return void
@@ -267,20 +266,19 @@ HTML;
 			if (file_exists($this->configPath . 'geshi.php')) {
 				include $this->configPath . 'geshi.php';
 			}
-		} else {
-			foreach ($this->features as $key => $value) {
-				foreach ($value as &$test) {
-					if (defined($test)) {
-						// convert strings to Geshi's constant values
-						// (exists possibility of name collisions)
-						$test = constant($test);
-					}
-				}
-				unset($test);
-				call_user_func_array(array($geshi, $key), $value);
-			}
+			return;
 		}
-
+		foreach ($this->features as $key => $value) {
+			foreach ($value as &$test) {
+				if (defined($test)) {
+					// convert strings to Geshi's constant values
+					// (exists possibility of name collisions)
+					$test = constant($test);
+				}
+			}
+			unset($test);
+			call_user_func_array(array($geshi, $key), $value);
+		}
 	}
 
 /**

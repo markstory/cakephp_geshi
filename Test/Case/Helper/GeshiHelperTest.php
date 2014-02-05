@@ -4,17 +4,61 @@ App::uses('GeshiHelper', 'Geshi.View/Helper');
 
 class GeshiHelperTest extends CakeTestCase {
 
+	protected $settings = array(
+		'set_header_type' => array('GESHI_HEADER_NONE'),
+		'enable_line_numbers' => array('GESHI_FANCY_LINE_NUMBERS', 2),
+		'enable_classes' => array(),
+		'set_tab_width' => array(4),
+	);
+
+	protected $view;
+	protected $configPath;
+
 	public function setUp() {
 		parent::setUp();
-
-		$view = $this->getMock('View');
-		$this->geshi = new GeshiHelper($view);
-		$this->geshi->configPath = dirname(dirname(dirname(__FILE__))) . DS;
+		$this->view = $this->getMock('View');
+		$this->geshi = new GeshiHelper($this->view);
+		$this->configPath = $this->geshi->configPath = dirname(dirname(dirname(__FILE__))) . DS;
 	}
 
 	public function tearDown() {
 		parent::tearDown();
+		unset($this->view, $this->geshi);
+	}
+
+/**
+ * Run the tests against the configuration variants.
+ *
+ * @param string $method The test method to run.
+ */
+	public function runVariants($method) {
+		// Using a config file, traditional.
+		$this->geshi = new GeshiHelper($this->view);
+		$this->geshi->configPath = $this->configPath;
+		call_user_func([$this, $method]);
 		unset($this->geshi);
+
+		// Pre-configuration during instantiation, such as from controller.
+		$this->geshi = new GeshiHelper($this->view, $this->settings);
+		unset($this->geshi->configPath);
+		call_user_func([$this, $method]);
+		unset($this->geshi);
+
+		// Configuration on the fly, such as from view.
+		$this->geshi = new GeshiHelper($this->view);
+		unset($this->geshi->configPath);
+		$this->geshi->features = $this->settings;
+		call_user_func([$this, $method]);
+		unset($this->geshi);
+	}
+
+/**
+ * Test highlighting with variants.
+ *
+ * @return void
+ */
+	public function testConfigVariants() {
+		$this->runVariants('testPlainTextButton');
 	}
 
 /**

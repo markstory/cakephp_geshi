@@ -1,8 +1,8 @@
 <?php
 namespace Geshi\Test\TestCase\Helper;
-App::uses('View', 'View');
-App::uses('GeshiHelper', 'Geshi.View/Helper');
 
+use Cake\View\View;
+use Geshi\View\Helper\GeshiHelper;
 class GeshiHelperTest extends CakeTestCase {
 
 	protected $settings = array(

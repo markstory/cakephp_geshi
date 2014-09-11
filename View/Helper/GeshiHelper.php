@@ -13,6 +13,9 @@
  */
 namespace Geshi\View\Helper;
 
+use App\View\Helper\AppHelper;
+use Cake\Core\App;
+use Cake\View\View;
 /**
  * Using App::Import instead of App::uses exposes Geshi's constants
  * to the view.

@@ -11,6 +11,7 @@
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  */
+namespace Geshi\View\Helper;
 
 /**
  * Using App::Import instead of App::uses exposes Geshi's constants

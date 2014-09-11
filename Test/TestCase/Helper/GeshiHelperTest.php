@@ -1,4 +1,5 @@
 <?php
+namespace Geshi\Test\TestCase\Helper;
 App::uses('View', 'View');
 App::uses('GeshiHelper', 'Geshi.View/Helper');
 

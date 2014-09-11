@@ -1,5 +1,6 @@
 <?php
 
+namespace Geshi\Test\TestCase;
 class AllTestsTest extends PHPUnit_Framework_TestSuite {
 
 /**

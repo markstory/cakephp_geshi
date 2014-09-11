@@ -5,11 +5,16 @@ your application.
 
 h2. Installation
 
-Either clone the repository or download a package and place it in a @Geshi@
-directory in one of your plugin paths.  For example @app/Plugin/Geshi@.
+You can install the plugin with composer. Add the following your composer.json file:
 
-Don't forget that starting with CakePHP 2.0, you must load plugins manually
-in @app/Config/bootstrap.php@. For example, @CakePlugin::loadAll()@
+	"require": {
+		"markstory/geshi": "3.0.*-dev"
+	}
+
+After running @composer update@ you should also remember to load the plugin.
+In your application's bootstrap.php file add the following:
+
+	Plugin::load('Geshi');
 
 h2. Include the helper in your controller
 
@@ -97,9 +102,9 @@ multiple languages served by the same controller.
 h2. Configure via a configuration file
 
 You can configure the GeSHi instance by creating a @geshi.php@ file in your
-@app/Config@ directory.  This file should contain the code/method calls to
+@/config@ directory.  This file should contain the code/method calls to
 configure the @$geshi@ object.  An example can be found in
-@Test/geshi.php@
+@tests/geshi.php@
 
 Note that the configuration file will be ignored completely if you have pre-configured
 the GeSHi instance in your @$helpers@ or have set @$this->Geshi->features@ in your view.
@@ -107,4 +112,3 @@ the GeSHi instance in your @$helpers@ or have set @$this->Geshi->features@ in yo
 h3. License
 
 This code is licensed under the MIT License.
-GeSHI is licensed under the GPLv2 License.

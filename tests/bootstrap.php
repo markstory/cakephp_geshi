@@ -71,4 +71,4 @@ Cache::config([
 	]
 ]);
 
-Plugin::load('Geshi', ['path' => ROOT, 'bootstrap' => true]);
+Plugin::load('Geshi', ['path' => ROOT]);

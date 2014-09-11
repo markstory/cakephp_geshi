@@ -7,22 +7,23 @@
  *
  * @author Mark story
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
- * @copyright 2008-2012 Mark Story <mark@mark-story.com>
+ * @copyright 2008-2014 Mark Story <mark@mark-story.com>
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  */
 namespace Geshi\View\Helper;
 
-use App\View\Helper\AppHelper;
 use Cake\Core\App;
+use Cake\View\Helper;
 use Cake\View\View;
+use GeSHi;
+
 /**
  * Using App::Import instead of App::uses exposes Geshi's constants
  * to the view.
  */
-App::import('Vendor', 'Geshi.geshi', array('file' => 'geshi.php'));
 
-class GeshiHelper extends AppHelper {
+class GeshiHelper extends Helper {
 
 /**
  * Path the configuration file can be found on.
@@ -200,7 +201,7 @@ HTML;
  */
 	protected function _getGeshi() {
 		if (!$this->_geshi) {
-			$this->_geshi = new geshi();
+			$this->_geshi = new GeSHi();
 		}
 		$this->_configureInstance($this->_geshi);
 		return $this->_geshi;

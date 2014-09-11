@@ -17,18 +17,19 @@
 		"source": "https://github.com/markstory/cakephp_geshi"
 	},
 	"autoload": {
-		"psr4": {
+		"psr-4": {
 			"Geshi\\": "src"
 		}
 	},
 	"autoload-dev": {
-		"psr4": {
+		"psr-4": {
 			"Geshi\\Test\\": "tests"
 		}
 	},
 	"require": {
 		"cakephp/cakephp": "3.0.*-dev",
-		"cakephp/plugin-installer": "dev-master"
+		"cakephp/plugin-installer": "dev-master",
+		"geshi/geshi": "dev-master"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "4.1.*"

@@ -1,22 +1,20 @@
 language: php
 
 php:
-  - 5.3
   - 5.4
   - 5.5
+  - 5.6
 
-env:
-  - CAKE_VERSION=2.3.10
-  - CAKE_VERSION=master
-  - CAKE_VERSION=2.5
+install:
+  - composer self-update
+  - composer install --dev
 
 before_script:
-  - git clone git://github.com/cakephp/cakephp ../cakephp && cd ../cakephp && git checkout $CAKE_VERSION
-  - cp -R ../geshi plugins/Geshi
-  - chmod -R 777 ../cakephp/app/tmp
+  - phpenv rehash
+  - set +H
 
 script:
-  - ./lib/Cake/Console/cake test Geshi AllTests --stderr
+  - phpunit
 
 notifications:
   email: false

@@ -132,8 +132,7 @@ class GeshiHelper extends Helper {
 			matches[4] = text to be highlighted
 			matches[5] = end tag
 		*/
-		$html = preg_replace_callback($pattern, array($this, '_processCodeBlock'), $htmlString);
-		return $this->output($html);
+		return preg_replace_callback($pattern, array($this, '_processCodeBlock'), $htmlString);
 	}
 
 /**

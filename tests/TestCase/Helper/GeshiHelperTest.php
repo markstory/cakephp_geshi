@@ -1,9 +1,11 @@
 <?php
-namespace Geshi\Test\TestCase\Helper;
+namespace Geshi\TestCase\Helper;
 
 use Cake\View\View;
 use Geshi\View\Helper\GeshiHelper;
-class GeshiHelperTest extends CakeTestCase {
+use Cake\TestSuite\TestCase;
+
+class GeshiHelperTest extends TestCase {
 
 	protected $settings = array(
 		'set_header_type' => array('GESHI_HEADER_NONE'),
@@ -17,7 +19,7 @@ class GeshiHelperTest extends CakeTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->view = $this->getMock('View');
+		$this->view = $this->getMock('Cake\View\View');
 		$this->geshi = new GeshiHelper($this->view);
 		$this->configPath = $this->geshi->configPath = dirname(dirname(dirname(__FILE__))) . DS;
 	}

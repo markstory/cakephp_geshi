@@ -265,7 +265,7 @@ HTML;
 	protected function _configureInstance($geshi) {
 		if (empty($this->features)) {
 			if (empty($this->configPath)) {
-				$this->configPath = APP . 'Config/';
+				$this->configPath = ROOT . 'config/';
 			}
 			if (file_exists($this->configPath . 'geshi.php')) {
 				include $this->configPath . 'geshi.php';

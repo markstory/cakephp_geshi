@@ -94,7 +94,7 @@ class GeshiHelperTest extends TestCase {
 			'/div',
 			'<p', 'More text', '/p'
 		);
-		$this->assertHtml($result, $expected);
+		$this->assertHtml($expected, $result);
 
 		// Two code blocks
 		$text = '<p>Some text</p><pre lang="php"><?php echo $foo; ?></pre><p>text</p><pre lang="php"><?php echo $bar; ?></pre><p>Even more text</p>';
@@ -131,7 +131,7 @@ class GeshiHelperTest extends TestCase {
 			'/div',
 			'<p', 'Even more text', '/p',
 		);
-		$this->assertHtml($result, $expected, true);
+		$this->assertHtml($expected, $result);
 
 		// Codeblock with single quotes Fails because of issues in CakeTestCase::assertHtml()
 		$text = '<pre lang=\'php\'><?php echo $foo = "foo"; ?></pre>';
@@ -153,7 +153,7 @@ class GeshiHelperTest extends TestCase {
 			'/ol',
 			'/div',
 		);
-		$this->assertHtml($result, $expected);
+		$this->assertHtml($expected, $result);
 
 		// More than one valid code block container
 		$this->geshi->validContainers = array('pre', 'code');
@@ -190,7 +190,7 @@ class GeshiHelperTest extends TestCase {
 			'/ol',
 			'/code',
 		);
-		$this->assertHtml($result, $expected, true);
+		$this->assertHtml($expected, $result, true);
 
 		// No valid languages no highlights
 		$this->geshi->validContainers = array('pre');
@@ -204,7 +204,7 @@ class GeshiHelperTest extends TestCase {
 			'/div',
 			'<p', 'text', '/p'
 		);
-		$this->assertHtml($result, $expected);
+		$this->assertHtml($expected, $result);
 	}
 
 /**
@@ -236,7 +236,7 @@ class GeshiHelperTest extends TestCase {
 			'/div',
 			'<p', 'More text', '/p'
 		);
-		$this->assertHtml($result, $expected);
+		$this->assertHtml($expected, $result);
 	}
 
 	public function testNoTagReplacement() {
@@ -265,7 +265,7 @@ class GeshiHelperTest extends TestCase {
 			'/pre',
 			'<p', 'More text', '/p'
 		);
-		$this->assertHtml($result, $expected);
+		$this->assertHtml($expected, $result);
 	}
 
 	public function testHighlightText() {
@@ -282,7 +282,7 @@ class GeshiHelperTest extends TestCase {
 				'/li',
 			'/ol',
 		);
-		$this->assertHtml($result, $expected);
+		$this->assertHtml($expected, $result);
 	}
 
 	public function testHighlightAsTable() {
@@ -322,7 +322,7 @@ CODE;
 			'/tbody',
 			'/table',
 		);
-		$this->assertHtml($result, $expected);
+		$this->assertHtml($expected, $result);
 	}
 
 }

@@ -94,7 +94,7 @@ class GeshiHelperTest extends TestCase {
 			'/div',
 			'<p', 'More text', '/p'
 		);
-		$this->assertTags($result, $expected);
+		$this->assertHtml($result, $expected);
 
 		// Two code blocks
 		$text = '<p>Some text</p><pre lang="php"><?php echo $foo; ?></pre><p>text</p><pre lang="php"><?php echo $bar; ?></pre><p>Even more text</p>';
@@ -131,9 +131,9 @@ class GeshiHelperTest extends TestCase {
 			'/div',
 			'<p', 'Even more text', '/p',
 		);
-		$this->assertTags($result, $expected, true);
+		$this->assertHtml($result, $expected, true);
 
-		// Codeblock with single quotes Fails because of issues in CakeTestCase::assertTags()
+		// Codeblock with single quotes Fails because of issues in CakeTestCase::assertHtml()
 		$text = '<pre lang=\'php\'><?php echo $foo = "foo"; ?></pre>';
 		$result = $this->geshi->highlight($text);
 		$expected = array(
@@ -153,7 +153,7 @@ class GeshiHelperTest extends TestCase {
 			'/ol',
 			'/div',
 		);
-		$this->assertTags($result, $expected);
+		$this->assertHtml($result, $expected);
 
 		// More than one valid code block container
 		$this->geshi->validContainers = array('pre', 'code');
@@ -190,7 +190,7 @@ class GeshiHelperTest extends TestCase {
 			'/ol',
 			'/code',
 		);
-		$this->assertTags($result, $expected, true);
+		$this->assertHtml($result, $expected, true);
 
 		// No valid languages no highlights
 		$this->geshi->validContainers = array('pre');
@@ -204,7 +204,7 @@ class GeshiHelperTest extends TestCase {
 			'/div',
 			'<p', 'text', '/p'
 		);
-		$this->assertTags($result, $expected);
+		$this->assertHtml($result, $expected);
 	}
 
 /**
@@ -236,7 +236,7 @@ class GeshiHelperTest extends TestCase {
 			'/div',
 			'<p', 'More text', '/p'
 		);
-		$this->assertTags($result, $expected);
+		$this->assertHtml($result, $expected);
 	}
 
 	public function testNoTagReplacement() {
@@ -265,7 +265,7 @@ class GeshiHelperTest extends TestCase {
 			'/pre',
 			'<p', 'More text', '/p'
 		);
-		$this->assertTags($result, $expected);
+		$this->assertHtml($result, $expected);
 	}
 
 	public function testHighlightText() {
@@ -282,7 +282,7 @@ class GeshiHelperTest extends TestCase {
 				'/li',
 			'/ol',
 		);
-		$this->assertTags($result, $expected);
+		$this->assertHtml($result, $expected);
 	}
 
 	public function testHighlightAsTable() {
@@ -322,7 +322,7 @@ CODE;
 			'/tbody',
 			'/table',
 		);
-		$this->assertTags($result, $expected);
+		$this->assertHtml($result, $expected);
 	}
 
 }

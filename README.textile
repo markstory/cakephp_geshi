@@ -8,7 +8,7 @@ h2. Installation
 You can install the plugin with composer. Add the following your composer.json file:
 
 	"require": {
-		"markstory/geshi": "3.0.*-dev"
+		"markstory/geshi": "~3.0"
 	}
 
 After running @composer update@ you should also remember to load the plugin.

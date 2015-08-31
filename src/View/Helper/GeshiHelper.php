@@ -19,10 +19,8 @@ use Cake\View\View;
 use GeSHi;
 
 /**
- * Using App::Import instead of App::uses exposes Geshi's constants
- * to the view.
+ * Expose Geshi Syntax highlighting in a CakePHP application.
  */
-
 class GeshiHelper extends Helper
 {
 
@@ -67,8 +65,8 @@ class GeshiHelper extends Helper
      * @var array
      */
     public $validLanguages = array(
-    'css', 'html', 'php', 'javascript', 'python', 'sql',
-    'ruby', 'coffeescript', 'bash',
+        'css', 'html', 'php', 'javascript', 'python', 'sql',
+        'ruby', 'coffeescript', 'bash', 'rust', 'go', 'c'
     );
 
     /**
@@ -86,7 +84,7 @@ class GeshiHelper extends Helper
      *
      * @var string
      */
-    public $langAttribute = 'lang';
+    public $langAttribute = '(?:lang|class)';
 
     /**
      * GeSHi Instance
@@ -125,16 +123,15 @@ class GeshiHelper extends Helper
     public function highlight($htmlString)
     {
         $tags = implode('|', $this->validContainers);
-     //yummy regex
         $pattern = '#(<(' . $tags . ')[^>]'.$this->langAttribute . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
-     /*
-      matches[0] = whole string
-      matches[1] = open tag including lang attribute
-      matches[2] = tag name
-      matches[3] = value of lang attribute
-      matches[4] = text to be highlighted
-      matches[5] = end tag
-     */
+        /*
+         matches[0] = whole string
+         matches[1] = open tag including lang attribute
+         matches[2] = tag name
+         matches[3] = value of lang attribute
+         matches[4] = text to be highlighted
+         matches[5] = end tag
+        */
         return preg_replace_callback($pattern, array($this, '_processCodeBlock'), $htmlString);
     }
 
@@ -151,7 +148,9 @@ class GeshiHelper extends Helper
         $this->_getGeshi();
         $this->_geshi->set_source($text);
         $this->_geshi->set_language($language);
-        return !$withStylesheet ? $this->_geshi->parse_code() : $this->_includeStylesheet() . $this->_geshi->parse_code();
+        return !$withStylesheet ?
+            $this->_geshi->parse_code() :
+            $this->_includeStylesheet() . $this->_geshi->parse_code();
     }
 
     /**
@@ -224,7 +223,7 @@ HTML;
         list($block, $openTag, $tagName, $lang, $code, $closeTag) = $matches;
         unset($matches);
 
-     // check language
+        // check language
         $lang = $this->validLang($lang);
         $code = html_entity_decode($code, ENT_QUOTES); // decode text in code block as GeSHi will re-encode it.
 
@@ -285,8 +284,8 @@ HTML;
         foreach ($this->features as $key => $value) {
             foreach ($value as &$test) {
                 if (defined($test)) {
-                 // convert strings to Geshi's constant values
-                 // (exists possibility of name collisions)
+                    // convert strings to Geshi's constant values
+                    // (exists possibility of name collisions)
                     $test = constant($test);
                 }
             }

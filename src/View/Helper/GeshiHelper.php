@@ -66,7 +66,8 @@ class GeshiHelper extends Helper
      */
     public $validLanguages = array(
         'css', 'html', 'php', 'javascript', 'python', 'sql',
-        'ruby', 'coffeescript', 'bash', 'rust', 'go', 'c'
+        'ruby', 'coffeescript', 'bash', 'rust', 'go', 'c',
+        'yaml', 'sass'
     );
 
     /**

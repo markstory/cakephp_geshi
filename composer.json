@@ -1,37 +1,39 @@
 {
-	"name": "markstory/cakephp_geshi",
-	"description": "CakePHP plugin that integrates with Geshi Syntax highlighter.",
-	"type": "cakephp-plugin",
-	"keywords": ["cakephp", "geshi", "helper", "highlighting"],
-	"homepage": "https://github.com/markstory/cakephp_geshi",
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Mark Story",
-			"homepage": "http://mark-story.com",
-			"role": "Author"
-		}
-	],
-	"support": {
-		"issues": "https://github.com/markstory/cakephp_geshi/issues",
-		"source": "https://github.com/markstory/cakephp_geshi"
-	},
-	"autoload": {
-		"psr-4": {
-			"Geshi\\": "src"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"Geshi\\Test\\": "tests"
-		}
-	},
-	"require": {
-		"cakephp/cakephp": "~3.0",
-		"cakephp/plugin-installer": "*",
-		"geshi/geshi": "dev-master"
-	},
-	"require-dev": {
-		"phpunit/phpunit": "4.1.*"
-	}
+    "name": "markstory/cakephp_geshi",
+    "description": "CakePHP plugin that integrates with Geshi Syntax highlighter.",
+    "type": "cakephp-plugin",
+    "keywords": ["cakephp", "geshi", "helper", "highlighting"],
+    "homepage": "https://github.com/markstory/cakephp_geshi",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mark Story",
+            "homepage": "http://mark-story.com",
+            "role": "Author"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/markstory/cakephp_geshi/issues",
+        "source": "https://github.com/markstory/cakephp_geshi"
+    },
+    "autoload": {
+        "psr-4": {
+            "Geshi\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Geshi\\Test\\": "tests"
+        }
+    },
+    "require": {
+        "cakephp/cakephp": "4.x-dev",
+        "cakephp/plugin-installer": "*",
+        "geshi/geshi": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

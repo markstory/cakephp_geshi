@@ -14,6 +14,7 @@ use Cake\I18n\I18n;
 require_once 'vendor/autoload.php';
 
 // Path constants to a few helpful things.
+define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', dirname(__DIR__) . DS);
 define('CAKE_CORE_INCLUDE_PATH', ROOT . 'vendor' . DS . 'cakephp' . DS . 'cakephp');
 define('CORE_PATH', ROOT . 'vendor' . DS . 'cakephp' . DS . 'cakephp' . DS);
@@ -47,7 +48,7 @@ Configure::write('App', [
     ]
 ]);
 
-Cache::config([
+Cache::setConfig([
     '_cake_core_' => [
         'engine' => 'File',
         'prefix' => 'cake_core_',
@@ -65,4 +66,4 @@ Cache::config([
     ]
 ]);
 
-Plugin::load('Geshi', ['path' => ROOT]);
+Plugin::getCollection()->add(new \Geshi\Plugin());

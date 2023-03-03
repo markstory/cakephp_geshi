@@ -18,6 +18,7 @@ namespace Geshi\View\Helper;
 use Cake\View\Helper;
 use Cake\View\View;
 use GeSHi;
+use InvalidArgumentException;
 
 /**
  * Expose Geshi Syntax highlighting in a CakePHP application.
@@ -25,66 +26,36 @@ use GeSHi;
 class GeshiHelper extends Helper
 {
     /**
-     * Path the configuration file can be found on.
-     * Configuration file will *not* be used if $features is set.
+     * Configuration data
      *
-     * @var string
+     * - `configPath` - Path the configuration file can be found on.
+     *   Configuration file will *not* be used if $features is set.
+     * - `features` - GeSHi features this instance will use. Set GeSHi options.
+     *   ex. `['set_header_type' => [2]]`
+     * - `validContainers` - The Container Elements that could contain highlightable code.
+     * - `containerMap` - Replace containers with divs to increase validation.
+     * - `validLanguages` - The languages you want to highlight.
+     * - `defaultLanguage` - Default language to use if no valid language is found.
+     *   Leave null to require a language attribute to be set on each container.
+     *   Can be string or false.
+     * - `langAttribute` - Regexp to find the HTML attribute use for finding the code Language.
+     * - `showPlainTextButton` - Show the Button that can be used with JS to switch to plain text.
+     *
+     * @param array
      */
-    public $configPath;
-
-    /**
-     * GeSHi features this instance will use. Set GeSHi options
-     *
-     *     $this->Geshi->features = array(...)
-     *
-     * in your view and/or in your controller $helpers setting
-     *
-     *     public $helpers = array('Geshi.Geshi' => array('set_header_type' => array( 2 ), ));
-     *
-     * @var array
-     */
-    public $features = [];
-
-    /**
-     * The Container Elements that could contain highlightable code
-     *
-     * @var array
-     */
-    public $validContainers = ['pre'];
-
-    /**
-     * Replace containers with divs to increase validation
-     *
-     * @var string
-     */
-    public $containerMap = ['pre' => ['div class="code"', 'div']];
-
-    /**
-     * The languages you want to highlight.
-     *
-     * @var array
-     */
-    public $validLanguages = [
-        'css', 'html', 'php', 'javascript', 'python', 'sql', 'ruby', 'coffeescript',
-        'bash', 'rust', 'go', 'c', 'yaml', 'sass', 'lua', 'dart', 'xml', 'json',
+    protected $_defaultConfig = [
+        'configPath' => '',
+        'features' => [],
+        'validContainers' => ['pre'],
+        'containerMap' => ['pre' => ['div class="code"', 'div']],
+        'validLanguages' => [
+            'css', 'html', 'php', 'javascript', 'python', 'sql', 'ruby', 'coffeescript',
+            'bash', 'rust', 'go', 'c', 'yaml', 'sass', 'lua', 'dart', 'xml', 'json',
+        ],
+        'defaultLanguage' => false,
+        'langAttribute' => '(?:lang|class)',
+        'showPlainTextButton' => true,
     ];
-
-    /**
-     * Default language to use if no valid language is found. Leave null to require a language attribute
-     * to be set on each container.
-     *
-     * @var mixed false for no default language, String for the default language
-     */
-    public $defaultLanguage = false;
-
-    /**
-     * The Attribute use for finding the code Language.
-     *
-     * Common choices are lang and class
-     *
-     * @var string
-     */
-    public $langAttribute = '(?:lang|class)';
 
     /**
      * GeSHi Instance
@@ -92,13 +63,6 @@ class GeshiHelper extends Helper
      * @var \GeSHi|null
      */
     protected $_geshi = null;
-
-    /**
-     * Show the Button that can be used with JS to switch to plain text.
-     *
-     * @var bool
-     */
-    public $showPlainTextButton = true;
 
     /**
      * Set the default features if any specified in $helpers
@@ -114,6 +78,37 @@ class GeshiHelper extends Helper
     }
 
     /**
+     * Magic getter for backwards compatibility with public variables.
+     *
+     * @param string $name The attribute to read
+     * @return mixed
+     */
+    public function __get(string $name)
+    {
+        if (!array_key_exists($name, $this->_defaultConfig)) {
+            throw new InvalidArgumentException("Invalid configuration key {$name}");
+        }
+
+        return $this->getConfig($name);
+    }
+
+    /**
+     * Magic setter for backwards compatibility with public variables.
+     *
+     * @param string $name The attribute to set
+     * @param mixed $value The attribute value
+     * @return void
+     */
+    public function __set(string $name, $value)
+    {
+        if (!array_key_exists($name, $this->_defaultConfig)) {
+            throw new InvalidArgumentException("Invalid configuration key {$name}");
+        }
+
+        $this->setConfig($name, $value);
+    }
+
+    /**
      * Highlight a block of HTML containing defined blocks. Converts blocks from plain text
      * into highlighted code.
      *
@@ -122,8 +117,8 @@ class GeshiHelper extends Helper
      */
     public function highlight(string $htmlString)
     {
-        $tags = implode('|', $this->validContainers);
-        $pattern = '#(<(' . $tags . ')[^>]' . $this->langAttribute . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
+        $tags = implode('|', $this->_config['validContainers']);
+        $pattern = '#(<(' . $tags . ')[^>]' . $this->_config['langAttribute'] . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
         /*
          matches[0] = whole string
          matches[1] = open tag including lang attribute
@@ -232,13 +227,13 @@ HTML;
         $lang = $this->validLang($lang);
         $code = html_entity_decode($code, ENT_QUOTES); // decode text in code block as GeSHi will re-encode it.
 
-        if (isset($this->containerMap[$tagName])) {
+        if (isset($this->_config['containerMap'][$tagName])) {
             $patt = '/' . preg_quote($tagName) . '/';
-            $openTag = preg_replace($patt, $this->containerMap[$tagName][0], $openTag);
-            $closeTag = preg_replace($patt, $this->containerMap[$tagName][1], $closeTag);
+            $openTag = preg_replace($patt, $this->_config['containerMap'][$tagName][0], $openTag);
+            $closeTag = preg_replace($patt, $this->_config['containerMap'][$tagName][1], $closeTag);
         }
 
-        if ($this->showPlainTextButton) {
+        if ($this->_config['showPlainTextButton']) {
             $button = '<a href="#null" class="geshi-plain-text">Show Plain Text</a>';
             $openTag = $button . $openTag;
         }
@@ -256,18 +251,18 @@ HTML;
      * Check if the current language is a valid language.
      *
      * @param string $lang Language
-     * @return mixed.
+     * @return string|null
      */
     public function validLang(string $lang)
     {
-        if (in_array($lang, $this->validLanguages)) {
+        if (in_array($lang, $this->_config['validLanguages'])) {
             return $lang;
         }
-        if ($this->defaultLanguage) {
-            return $this->defaultLanguage;
+        if ($this->_config['defaultLanguage']) {
+            return $this->_config['defaultLanguage'];
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -280,17 +275,17 @@ HTML;
      */
     protected function _configureInstance(GeSHi $geshi)
     {
-        if (empty($this->features)) {
-            if (empty($this->configPath)) {
-                $this->configPath = ROOT . DS . 'config' . DS;
+        if (empty($this->_config['features'])) {
+            if (empty($this->_config['configPath'])) {
+                $this->_config['configPath'] = ROOT . DS . 'config' . DS;
             }
-            if (file_exists($this->configPath . 'geshi.php')) {
-                include $this->configPath . 'geshi.php';
+            if (file_exists($this->_config['configPath'] . 'geshi.php')) {
+                include $this->_config['configPath'] . 'geshi.php';
             }
 
             return;
         }
-        foreach ($this->features as $key => $value) {
+        foreach ($this->_config['features'] as $key => $value) {
             foreach ($value as &$test) {
                 if (is_string($test) && defined($test)) {
                     // convert strings to Geshi's constant values

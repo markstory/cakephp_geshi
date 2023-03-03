@@ -105,7 +105,7 @@ class GeshiHelper extends Helper
             throw new InvalidArgumentException("Invalid configuration key {$name}");
         }
 
-        $this->setConfig($name, $value);
+        $this->setConfig($name, $value, false);
     }
 
     /**

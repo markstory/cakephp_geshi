@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Geshi Helper
  *
@@ -13,105 +15,109 @@
  */
 namespace Geshi\View\Helper;
 
-use Cake\Core\App;
 use Cake\View\Helper;
+use Cake\View\StringTemplateTrait;
 use Cake\View\View;
 use GeSHi;
+use InvalidArgumentException;
 
 /**
  * Expose Geshi Syntax highlighting in a CakePHP application.
  */
 class GeshiHelper extends Helper
 {
+    use StringTemplateTrait;
 
     /**
-     * Path the configuration file can be found on.
-     * Configuration file will *not* be used if $features is set.
+     * Configuration data
      *
-     * @var string
+     * - `configPath` - Path the configuration file can be found on.
+     *   Configuration file will *not* be used if $features is set.
+     * - `features` - GeSHi features this instance will use. Set GeSHi options.
+     *   ex. `['set_header_type' => [2]]`
+     * - `validContainers` - The Container Elements that could contain highlightable code.
+     * - `containerMap` - Replace containers with divs to increase validation.
+     * - `validLanguages` - The languages you want to highlight.
+     * - `defaultLanguage` - Default language to use if no valid language is found.
+     *   Leave null to require a language attribute to be set on each container.
+     *   Can be string or false.
+     * - `langAttribute` - Regexp to find the HTML attribute use for finding the code Language.
+     * - `showPlainTextButton` - Show the Button that can be used with JS to switch to plain text.
+     * - `templates` - Formatting templates.
+     *
+     * @param array
      */
-    public $configPath;
-
-    /**
-     * GeSHi features this instance will use. Set GeSHi options
-     *
-     *     $this->Geshi->features = array(...)
-     *
-     * in your view and/or in your controller $helpers setting
-     *
-     *     public $helpers = array('Geshi.Geshi' => array('set_header_type' => array( 2 ), ));
-     *
-     * @var array
-     */
-    public $features = array();
-
-    /**
-     * The Container Elements that could contain highlightable code
-     *
-     * @var array
-     */
-    public $validContainers = array('pre');
-
-    /**
-     * Replace containers with divs to increase validation
-     *
-     * @var string
-     */
-    public $containerMap = array('pre' => array('div class="code"', 'div'));
-
-    /**
-     * The languages you want to highlight.
-     *
-     * @var array
-     */
-    public $validLanguages = array(
-        'css', 'html', 'php', 'javascript', 'python', 'sql',
-        'ruby', 'coffeescript', 'bash', 'rust', 'go', 'c',
-        'yaml', 'sass'
-    );
-
-    /**
-     * Default language to use if no valid language is found. Leave null to require a language attribute
-     * to be set on each container.
-     *
-     * @var mixed false for no default language, String for the default language
-     */
-    public $defaultLanguage = false;
-
-    /**
-     * The Attribute use for finding the code Language.
-     *
-     * Common choices are lang and class
-     *
-     * @var string
-     */
-    public $langAttribute = '(?:lang|class)';
+    protected $_defaultConfig = [
+        'configPath' => '',
+        'features' => [],
+        'validContainers' => ['pre'],
+        'containerMap' => ['pre' => ['div class="code"', 'div']],
+        'validLanguages' => [
+            'css', 'html', 'php', 'javascript', 'python', 'sql', 'ruby', 'coffeescript',
+            'bash', 'rust', 'go', 'c', 'yaml', 'sass', 'lua', 'dart', 'xml', 'json',
+        ],
+        'defaultLanguage' => false,
+        'langAttribute' => '(?:lang|class)',
+        'showPlainTextButton' => true,
+        'templates' => [
+            // Used to layout button, wrapper and content.
+            'layout' => '{{showplain}}{{open}}{{content}}{{close}}',
+            // The highlighted text. Provided so wrapping markup can be added.
+            'content' => '{{code}}',
+            // The button element and wrappers used for showPlainTextButton
+            'showplain' => '<a href="#null" class="geshi-plain-text">Show Plain Text</a>',
+        ],
+    ];
 
     /**
      * GeSHi Instance
      *
-     * @var object
+     * @var \GeSHi|null
      */
     protected $_geshi = null;
 
     /**
-     * Show the Button that can be used with JS to switch to plain text.
-     *
-     * @var boolean
-     */
-    public $showPlainTextButton = true;
-
-    /**
      * Set the default features if any specified in $helpers
      *
-     * @param string $view
-     * @param array $settings
+     * @param \Cake\View\View $view Cake view
+     * @param array $settings config data
      * @return void
      */
-    public function __construct(View $view, $settings = array())
+    public function __construct(View $view, array $settings = [])
     {
         $this->features = $settings;
         parent::__construct($view, $settings);
+    }
+
+    /**
+     * Magic getter for backwards compatibility with public variables.
+     *
+     * @param string $name The attribute to read
+     * @return mixed
+     */
+    public function __get(string $name)
+    {
+        if (!array_key_exists($name, $this->_defaultConfig)) {
+            throw new InvalidArgumentException("Invalid configuration key {$name}");
+        }
+
+        return $this->getConfig($name);
+    }
+
+    /**
+     * Magic setter for backwards compatibility with public variables.
+     *
+     * @param string $name The attribute to set
+     * @param mixed $value The attribute value
+     * @return void
+     */
+    public function __set(string $name, $value)
+    {
+        if (!array_key_exists($name, $this->_defaultConfig)) {
+            throw new InvalidArgumentException("Invalid configuration key {$name}");
+        }
+
+        $this->setConfig($name, $value, false);
     }
 
     /**
@@ -121,10 +127,12 @@ class GeshiHelper extends Helper
      * @param string $htmlString
      * @return void
      */
-    public function highlight($htmlString)
+    public function highlight(string $htmlString)
     {
-        $tags = implode('|', $this->validContainers);
-        $pattern = '#(<(' . $tags . ')[^>]'.$this->langAttribute . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
+        $tags = implode('|', $this->_config['validContainers']);
+        $pattern = '#(<(' . $tags . ')[^>]' .
+            $this->_config['langAttribute'] .
+            '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
         /*
          matches[0] = whole string
          matches[1] = open tag including lang attribute
@@ -133,7 +141,7 @@ class GeshiHelper extends Helper
          matches[4] = text to be highlighted
          matches[5] = end tag
         */
-        return preg_replace_callback($pattern, array($this, '_processCodeBlock'), $htmlString);
+        return preg_replace_callback($pattern, [$this, '_processCodeBlock'], $htmlString);
     }
 
     /**
@@ -144,11 +152,12 @@ class GeshiHelper extends Helper
      * @param bool $withStylesheet If true will include GeSHi's generated stylesheet.
      * @return string Highlighted HTML.
      */
-    public function highlightText($text, $language, $withStylesheet = false)
+    public function highlightText(string $text, string $language, bool $withStylesheet = false)
     {
         $this->_getGeshi();
         $this->_geshi->set_source($text);
         $this->_geshi->set_language($language);
+
         return !$withStylesheet ?
             $this->_geshi->parse_code() :
             $this->_includeStylesheet() . $this->_geshi->parse_code();
@@ -170,6 +179,7 @@ class GeshiHelper extends Helper
         $this->_geshi->set_language($language);
         $this->_geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
         $highlight = $this->_geshi->parse_code();
+
         return $this->_convertToTable($highlight);
     }
 
@@ -181,7 +191,7 @@ class GeshiHelper extends Helper
             $lines,
             PREG_SET_ORDER
         );
-        $numbers = $code = array();
+        $numbers = $code = [];
         foreach ($lines as $i => $line) {
             $numbers[] = sprintf('<div class="de1">%d</div>', $i + 1);
             $code[] = $line[1];
@@ -194,6 +204,7 @@ class GeshiHelper extends Helper
 </tbody>
 </table>
 HTML;
+
         return sprintf(
             $template,
             implode("\n", $numbers),
@@ -210,6 +221,7 @@ HTML;
             $this->_geshi = new GeSHi();
         }
         $this->_configureInstance($this->_geshi);
+
         return $this->_geshi;
     }
 
@@ -217,50 +229,60 @@ HTML;
      * Preg Replace Callback
      * Uses matches made earlier runs geshi returns processed code blocks.
      *
+     * @param array $matches code block groups
      * @return string Completed replacement string
      */
-    protected function _processCodeBlock($matches)
+    protected function _processCodeBlock(array $matches)
     {
-        list($block, $openTag, $tagName, $lang, $code, $closeTag) = $matches;
+        [$block, $openTag, $tagName, $lang, $code, $closeTag] = $matches;
         unset($matches);
 
         // check language
         $lang = $this->validLang($lang);
         $code = html_entity_decode($code, ENT_QUOTES); // decode text in code block as GeSHi will re-encode it.
 
-        if (isset($this->containerMap[$tagName])) {
+        $templater = $this->templater();
+
+        if (isset($this->_config['containerMap'][$tagName])) {
             $patt = '/' . preg_quote($tagName) . '/';
-            $openTag = preg_replace($patt, $this->containerMap[$tagName][0], $openTag);
-            $closeTag = preg_replace($patt, $this->containerMap[$tagName][1], $closeTag);
+            $openTag = preg_replace($patt, $this->_config['containerMap'][$tagName][0], $openTag);
+            $closeTag = preg_replace($patt, $this->_config['containerMap'][$tagName][1], $closeTag);
         }
 
-        if ($this->showPlainTextButton) {
-            $button = '<a href="#null" class="geshi-plain-text">Show Plain Text</a>';
-            $openTag = $button . $openTag;
+        $button = '';
+        if ($this->_config['showPlainTextButton']) {
+            $button = $templater->format('showplain', []);
         }
 
         if ($lang) {
-            $highlighted = $this->highlightText(trim($code), $lang);
-            return $openTag . $highlighted . $closeTag;
+            $code = $this->highlightText(trim($code), $lang);
         }
-        return $openTag . $code . $closeTag;
+        $content = $templater->format('content', ['code' => $code]);
+
+        return $templater->format('layout', [
+            'showplain' => $button,
+            'content' => $content,
+            'open' => $openTag,
+            'close' => $closeTag,
+        ]);
     }
 
     /**
      * Check if the current language is a valid language.
      *
      * @param string $lang Language
-     * @return mixed.
+     * @return string|null
      */
-    public function validLang($lang)
+    public function validLang(string $lang)
     {
-        if (in_array($lang, $this->validLanguages)) {
+        if (in_array($lang, $this->_config['validLanguages'])) {
             return $lang;
         }
-        if ($this->defaultLanguage) {
-            return $this->defaultLanguage;
+        if ($this->_config['defaultLanguage']) {
+            return $this->_config['defaultLanguage'];
         }
-        return false;
+
+        return null;
     }
 
     /**
@@ -268,30 +290,31 @@ HTML;
      *
      *     $this->Geshi->features = array(...)
      *
-     * @param Geshi $geshi
+     * @param \GeSHi $geshi Geshi instance
      * @return void
      */
-    protected function _configureInstance($geshi)
+    protected function _configureInstance(GeSHi $geshi)
     {
-        if (empty($this->features)) {
-            if (empty($this->configPath)) {
-                $this->configPath = ROOT . DS . 'config' . DS;
+        if (empty($this->_config['features'])) {
+            if (empty($this->_config['configPath'])) {
+                $this->_config['configPath'] = ROOT . DS . 'config' . DS;
             }
-            if (file_exists($this->configPath . 'geshi.php')) {
-                include $this->configPath . 'geshi.php';
+            if (file_exists($this->_config['configPath'] . 'geshi.php')) {
+                include $this->_config['configPath'] . 'geshi.php';
             }
+
             return;
         }
-        foreach ($this->features as $key => $value) {
+        foreach ($this->_config['features'] as $key => $value) {
             foreach ($value as &$test) {
-                if (defined($test)) {
+                if (is_string($test) && defined($test)) {
                     // convert strings to Geshi's constant values
                     // (exists possibility of name collisions)
                     $test = constant($test);
                 }
             }
             unset($test);
-            call_user_func_array(array($geshi, $key), $value);
+            call_user_func_array([$geshi, $key], $value);
         }
     }
 
@@ -309,6 +332,7 @@ HTML;
 -->
 </style>\n
 HTML;
+
         return sprintf(
             $template,
             $this->_geshi->get_stylesheet()

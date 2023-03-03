@@ -33,10 +33,10 @@ next.
 
 ### Include without pre-configuration
 
-To use the helper, include the helper in your controller:
+To use the helper, include the helper in your View:
 
 ```php
-public $helpers = array('Geshi.Geshi');
+public $helpers = ['Geshi.Geshi'];
 ```
 
 You will have to include a `geshi.php` configuration file or simply set the
@@ -48,11 +48,11 @@ To use the helper and specify specific GeSHi features, use the options form
 of including helpers:
 
 ```php
-public $helpers = array(
-	'Geshi.Geshi' => array(
-		'set_header_type' => array('GESHI_FANCY_LINE_NUMBERS',5)
-	)
-);
+public $helpers = [
+	'Geshi.Geshi' => [
+		'set_header_type' => ['GESHI_FANCY_LINE_NUMBERS', 5]
+	]
+];
 ```
 
 Where the passed-in key is a GeSHi function name, and the passed-in values
@@ -106,9 +106,9 @@ You can configure GeSHI's features from within your views
 by accessing the `$features` variable so: `$this->Geshi->features = array(...)`, for example:
 
 ```php
-$this->Geshi->features = array(
-	'geshi_function_name' => array('geshi_parameter', list, values)
-);
+$this->Geshi->setConfig('features', [
+	'geshi_function_name' => ['geshi_parameter', list, values]
+]);
 ```
 
 Note that GeSHI's constants _are_ in scope here, and so quoting parameter

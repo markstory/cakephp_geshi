@@ -65,9 +65,8 @@ class GeshiHelper extends Helper
      * @var array
      */
     public $validLanguages = [
-        'css', 'html', 'php', 'javascript', 'python', 'sql',
-        'ruby', 'coffeescript', 'bash', 'rust', 'go', 'c',
-        'yaml', 'sass',
+        'css', 'html', 'php', 'javascript', 'python', 'sql', 'ruby', 'coffeescript',
+        'bash', 'rust', 'go', 'c', 'yaml', 'sass', 'lua', 'dart', 'xml', 'json',
     ];
 
     /**
@@ -90,7 +89,7 @@ class GeshiHelper extends Helper
     /**
      * GeSHi Instance
      *
-     * @var object
+     * @var \GeSHi|null
      */
     protected $_geshi = null;
 
@@ -104,11 +103,11 @@ class GeshiHelper extends Helper
     /**
      * Set the default features if any specified in $helpers
      *
-     * @param string $view
-     * @param array $settings
+     * @param \Cake\View\View $view Cake view
+     * @param array $settings config data
      * @return void
      */
-    public function __construct(View $view, $settings = [])
+    public function __construct(View $view, array $settings = [])
     {
         $this->features = $settings;
         parent::__construct($view, $settings);
@@ -121,7 +120,7 @@ class GeshiHelper extends Helper
      * @param string $htmlString
      * @return void
      */
-    public function highlight($htmlString)
+    public function highlight(string $htmlString)
     {
         $tags = implode('|', $this->validContainers);
         $pattern = '#(<(' . $tags . ')[^>]' . $this->langAttribute . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
@@ -144,7 +143,7 @@ class GeshiHelper extends Helper
      * @param bool $withStylesheet If true will include GeSHi's generated stylesheet.
      * @return string Highlighted HTML.
      */
-    public function highlightText($text, $language, $withStylesheet = false)
+    public function highlightText(string $text, string $language, bool $withStylesheet = false)
     {
         $this->_getGeshi();
         $this->_geshi->set_source($text);
@@ -221,9 +220,10 @@ HTML;
      * Preg Replace Callback
      * Uses matches made earlier runs geshi returns processed code blocks.
      *
+     * @param array $matches code block groups
      * @return string Completed replacement string
      */
-    protected function _processCodeBlock($matches)
+    protected function _processCodeBlock(array $matches)
     {
         [$block, $openTag, $tagName, $lang, $code, $closeTag] = $matches;
         unset($matches);
@@ -258,7 +258,7 @@ HTML;
      * @param string $lang Language
      * @return mixed.
      */
-    public function validLang($lang)
+    public function validLang(string $lang)
     {
         if (in_array($lang, $this->validLanguages)) {
             return $lang;
@@ -275,10 +275,10 @@ HTML;
      *
      *     $this->Geshi->features = array(...)
      *
-     * @param \GeSHi $geshi
+     * @param \GeSHi $geshi Geshi instance
      * @return void
      */
-    protected function _configureInstance($geshi)
+    protected function _configureInstance(GeSHi $geshi)
     {
         if (empty($this->features)) {
             if (empty($this->configPath)) {

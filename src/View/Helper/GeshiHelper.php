@@ -130,7 +130,9 @@ class GeshiHelper extends Helper
     public function highlight(string $htmlString)
     {
         $tags = implode('|', $this->_config['validContainers']);
-        $pattern = '#(<(' . $tags . ')[^>]' . $this->_config['langAttribute'] . '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
+        $pattern = '#(<(' . $tags . ')[^>]' .
+            $this->_config['langAttribute'] .
+            '=["\']+([^\'".]*)["\']+>)(.*?)(</\2\s*>|$)#s';
         /*
          matches[0] = whole string
          matches[1] = open tag including lang attribute

@@ -36,5 +36,10 @@
         "phpunit/phpunit": "^8",
         "cakephp/cakephp-codesniffer": "^4.0"
     },
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+      "allow-plugins": {
+        "cakephp/plugin-installer": true
+      }
+    }
 }

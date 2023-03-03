@@ -337,4 +337,32 @@ CODE;
         ];
         $this->assertHtml($expected, $result);
     }
+
+    public function testTemplates()
+    {
+        $this->geshi->setConfig('templates', [
+            'layout' => '<w>{{showplain}}{{open}}{{content}}{{close}}</w>',
+            // The highlighted text. Provided so wrapping markup can be added.
+            'content' => '<c>{{code}}</c>',
+            // The button element and wrappers used for showPlainTextButton
+            'showplain' => '<a href="#null">Plain Text</a>',
+        ]);
+        $this->geshi->validContainers = ['pre'];
+        $this->geshi->validLanguages = [];
+        $text = '<p>text</p><pre lang="php">echo $foo;</pre><p>text</p>';
+        $result = $this->geshi->highlight($text);
+        $expected = [
+            '<p', 'text', '/p',
+            '<w',
+            ['a' => ['href' => '#null']], 'Plain Text', '/a',
+            ['div' => ['class' => 'code', 'lang' => 'php']],
+            '<c',
+            'echo $foo;',
+            '/c',
+            '/div',
+            '/w',
+            '<p', 'text', '/p',
+        ];
+        $this->assertHtml($expected, $result);
+    }
 }

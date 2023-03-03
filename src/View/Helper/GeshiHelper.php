@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Geshi\View\Helper;
 
 use Cake\View\Helper;
+use Cake\View\StringTemplateTrait;
 use Cake\View\View;
 use GeSHi;
 use InvalidArgumentException;
@@ -25,6 +26,8 @@ use InvalidArgumentException;
  */
 class GeshiHelper extends Helper
 {
+    use StringTemplateTrait;
+
     /**
      * Configuration data
      *
@@ -40,6 +43,7 @@ class GeshiHelper extends Helper
      *   Can be string or false.
      * - `langAttribute` - Regexp to find the HTML attribute use for finding the code Language.
      * - `showPlainTextButton` - Show the Button that can be used with JS to switch to plain text.
+     * - `templates` - Formatting templates.
      *
      * @param array
      */
@@ -55,6 +59,14 @@ class GeshiHelper extends Helper
         'defaultLanguage' => false,
         'langAttribute' => '(?:lang|class)',
         'showPlainTextButton' => true,
+        'templates' => [
+            // Used to layout button, wrapper and content.
+            'layout' => '{{showplain}}{{open}}{{content}}{{close}}',
+            // The highlighted text. Provided so wrapping markup can be added.
+            'content' => '{{code}}',
+            // The button element and wrappers used for showPlainTextButton
+            'showplain' => '<a href="#null" class="geshi-plain-text">Show Plain Text</a>',
+        ],
     ];
 
     /**
@@ -227,24 +239,30 @@ HTML;
         $lang = $this->validLang($lang);
         $code = html_entity_decode($code, ENT_QUOTES); // decode text in code block as GeSHi will re-encode it.
 
+        $templater = $this->templater();
+
         if (isset($this->_config['containerMap'][$tagName])) {
             $patt = '/' . preg_quote($tagName) . '/';
             $openTag = preg_replace($patt, $this->_config['containerMap'][$tagName][0], $openTag);
             $closeTag = preg_replace($patt, $this->_config['containerMap'][$tagName][1], $closeTag);
         }
 
+        $button = '';
         if ($this->_config['showPlainTextButton']) {
-            $button = '<a href="#null" class="geshi-plain-text">Show Plain Text</a>';
-            $openTag = $button . $openTag;
+            $button = $templater->format('showplain', []);
         }
 
         if ($lang) {
-            $highlighted = $this->highlightText(trim($code), $lang);
-
-            return $openTag . $highlighted . $closeTag;
+            $code = $this->highlightText(trim($code), $lang);
         }
+        $content = $templater->format('content', ['code' => $code]);
 
-        return $openTag . $code . $closeTag;
+        return $templater->format('layout', [
+            'showplain' => $button,
+            'content' => $content,
+            'open' => $openTag,
+            'close' => $closeTag,
+        ]);
     }
 
     /**

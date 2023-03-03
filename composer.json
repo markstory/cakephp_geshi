@@ -27,7 +27,7 @@
         }
     },
     "require": {
-        "php": ">=7.2.0",
+        "php": ">=7.4.0",
         "cakephp/cakephp": "^4.0",
         "cakephp/plugin-installer": "*",
         "geshi/geshi": "^1.0"

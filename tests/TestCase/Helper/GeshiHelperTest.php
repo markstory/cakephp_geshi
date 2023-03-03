@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace Geshi\TestCase\Helper;
 
-use Geshi\View\Helper\GeshiHelper;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
+use Geshi\View\Helper\GeshiHelper;
 
 class GeshiHelperTest extends TestCase
 {
@@ -84,22 +86,22 @@ class GeshiHelperTest extends TestCase
         $result = $this->geshi->highlight($text);
         $expected = [
             '<p', 'This is some text', '/p',
-            'div' => ['class' => "code", 'lang' => "php"],
-                'ol' => ["class" => "php"],
-                    ['li' => ['class' => "li1"]],
-                        ["div" => ['class' => "de1"]],
-                            ["span" => ["class" => "kw2"]], '&lt;?php', '/span',
-                            ['span' => ['class' => "kw1"]], 'echo', '/span',
-                            ['span' => ['class' => "re0"]], '$foo', '/span',
-                            ['span' => ['class' => "sy0"]], '=', '/span',
-                            ['span' => ['class' => "st0"]], '&quot;foo&quot;', '/span',
-                            ['span' => ['class' => "sy0"]], ';', '/span',
-                            ['span' => ['class' => "sy1"]], '?&gt;', '/span',
+            'div' => ['class' => 'code', 'lang' => 'php'],
+                'ol' => ['class' => 'php'],
+                    ['li' => ['class' => 'li1']],
+                        ['div' => ['class' => 'de1']],
+                            ['span' => ['class' => 'kw2']], '&lt;?php', '/span',
+                            ['span' => ['class' => 'kw1']], 'echo', '/span',
+                            ['span' => ['class' => 're0']], '$foo', '/span',
+                            ['span' => ['class' => 'sy0']], '=', '/span',
+                            ['span' => ['class' => 'st0']], '&quot;foo&quot;', '/span',
+                            ['span' => ['class' => 'sy0']], ';', '/span',
+                            ['span' => ['class' => 'sy1']], '?&gt;', '/span',
                         '/div',
                     '/li',
                 '/ol',
             '/div',
-            '<p', 'More text', '/p'
+            '<p', 'More text', '/p',
         ];
         $this->assertHtml($expected, $result);
 
@@ -109,29 +111,29 @@ class GeshiHelperTest extends TestCase
 
         $expected = [
             '<p', 'Some text', '/p',
-            ['div' => ['class' => "code", 'lang' => "php"]],
-                ['ol' => ["class" => "php"]],
-                    ['li' => ['class' => "li1"]],
-                        ["div" => ['class' => "de1"]],
-                            ["span" => ["class" => "kw2"]], '&lt;?php', '/span',
-                            ['span' => ['class' => "kw1"]], 'echo', '/span',
-                            ['span' => ['class' => "re0"]], '$foo', '/span',
-                            ['span' => ['class' => "sy0"]], ';', '/span',
-                            ['span' => ['class' => "sy1"]], '?&gt;', '/span',
+            ['div' => ['class' => 'code', 'lang' => 'php']],
+                ['ol' => ['class' => 'php']],
+                    ['li' => ['class' => 'li1']],
+                        ['div' => ['class' => 'de1']],
+                            ['span' => ['class' => 'kw2']], '&lt;?php', '/span',
+                            ['span' => ['class' => 'kw1']], 'echo', '/span',
+                            ['span' => ['class' => 're0']], '$foo', '/span',
+                            ['span' => ['class' => 'sy0']], ';', '/span',
+                            ['span' => ['class' => 'sy1']], '?&gt;', '/span',
                         '/div',
                     '/li',
                 '/ol',
                 '/div',
                 '<p', 'text', '/p',
-                ['div' => ['class' => "code", 'lang' => "php"]],
-                ['ol' => ["class" => "php"]],
-                    ['li' => ['class' => "li1"]],
-                        ["div" => ['class' => "de1"]],
-                            ["span" => ["class" => "kw2"]], '&lt;?php', '/span',
-                            ['span' => ['class' => "kw1"]], 'echo', '/span',
-                            ['span' => ['class' => "re0"]], '$bar', '/span',
-                            ['span' => ['class' => "sy0"]], ';', '/span',
-                            ['span' => ['class' => "sy1"]], '?&gt;', '/span',
+                ['div' => ['class' => 'code', 'lang' => 'php']],
+                ['ol' => ['class' => 'php']],
+                    ['li' => ['class' => 'li1']],
+                        ['div' => ['class' => 'de1']],
+                            ['span' => ['class' => 'kw2']], '&lt;?php', '/span',
+                            ['span' => ['class' => 'kw1']], 'echo', '/span',
+                            ['span' => ['class' => 're0']], '$bar', '/span',
+                            ['span' => ['class' => 'sy0']], ';', '/span',
+                            ['span' => ['class' => 'sy1']], '?&gt;', '/span',
                         '/div',
                     '/li',
                 '/ol',
@@ -144,17 +146,17 @@ class GeshiHelperTest extends TestCase
         $text = '<pre lang=\'php\'><?php echo $foo = "foo"; ?></pre>';
         $result = $this->geshi->highlight($text);
         $expected = [
-            ['div' => ['class' => "code", 'lang' => 'php']],
-                ['ol' => ["class" => "php"]],
-                    ['li' => ['class' => "li1"]],
-                        ["div" => ['class' => "de1"]],
-                            ["span" => ["class" => "kw2"]], '&lt;?php', '/span',
-                            ['span' => ['class' => "kw1"]], 'echo', '/span',
-                            ['span' => ['class' => "re0"]], '$foo', '/span',
-                            ['span' => ['class' => "sy0"]], '=', '/span',
-                            ['span' => ['class' => "st0"]], '&quot;foo&quot;', '/span',
-                            ['span' => ['class' => "sy0"]], ';', '/span',
-                            ['span' => ['class' => "sy1"]], '?&gt;', '/span',
+            ['div' => ['class' => 'code', 'lang' => 'php']],
+                ['ol' => ['class' => 'php']],
+                    ['li' => ['class' => 'li1']],
+                        ['div' => ['class' => 'de1']],
+                            ['span' => ['class' => 'kw2']], '&lt;?php', '/span',
+                            ['span' => ['class' => 'kw1']], 'echo', '/span',
+                            ['span' => ['class' => 're0']], '$foo', '/span',
+                            ['span' => ['class' => 'sy0']], '=', '/span',
+                            ['span' => ['class' => 'st0']], '&quot;foo&quot;', '/span',
+                            ['span' => ['class' => 'sy0']], ';', '/span',
+                            ['span' => ['class' => 'sy1']], '?&gt;', '/span',
                         '/div',
                     '/li',
                 '/ol',
@@ -163,35 +165,35 @@ class GeshiHelperTest extends TestCase
         $this->assertHtml($expected, $result);
 
         // More than one valid code block container
-        $this->geshi->validContainers = array('pre', 'code');
+        $this->geshi->validContainers = ['pre', 'code'];
         $text = '<pre lang="php"><?php echo $foo = "foo"; ?></pre><p>Text</p><code lang="php">echo $foo = "foo";</code>';
         $result = $this->geshi->highlight($text);
         $expected = [
-            ['div' => ['class' => "code", 'lang' => 'php']],
-                ['ol' => ["class" => "php"]],
-                    ['li' => ['class' => "li1"]],
-                        ["div" => ['class' => "de1"]],
-                            ["span" => ["class" => "kw2"]], '&lt;?php', '/span',
-                            ['span' => ['class' => "kw1"]], 'echo', '/span',
-                            ['span' => ['class' => "re0"]], '$foo', '/span',
-                            ['span' => ['class' => "sy0"]], '=', '/span',
-                            ['span' => ['class' => "st0"]], '&quot;foo&quot;', '/span',
-                            ['span' => ['class' => "sy0"]], ';', '/span',
-                            ['span' => ['class' => "sy1"]], '?&gt;', '/span',
+            ['div' => ['class' => 'code', 'lang' => 'php']],
+                ['ol' => ['class' => 'php']],
+                    ['li' => ['class' => 'li1']],
+                        ['div' => ['class' => 'de1']],
+                            ['span' => ['class' => 'kw2']], '&lt;?php', '/span',
+                            ['span' => ['class' => 'kw1']], 'echo', '/span',
+                            ['span' => ['class' => 're0']], '$foo', '/span',
+                            ['span' => ['class' => 'sy0']], '=', '/span',
+                            ['span' => ['class' => 'st0']], '&quot;foo&quot;', '/span',
+                            ['span' => ['class' => 'sy0']], ';', '/span',
+                            ['span' => ['class' => 'sy1']], '?&gt;', '/span',
                         '/div',
                     '/li',
                 '/ol',
             '/div',
             '<p', 'Text', '/p',
             ['code' => ['lang' => 'php']],
-                ['ol' => ["class" => "php"]],
-                    ['li' => ['class' => "li1"]],
-                        ["div" => ['class' => "de1"]],
-                            ['span' => ['class' => "kw1"]], 'echo', '/span',
-                            ['span' => ['class' => "re0"]], '$foo', '/span',
-                            ['span' => ['class' => "sy0"]], '=', '/span',
-                            ['span' => ['class' => "st0"]], '&quot;foo&quot;', '/span',
-                            ['span' => ['class' => "sy0"]], ';', '/span',
+                ['ol' => ['class' => 'php']],
+                    ['li' => ['class' => 'li1']],
+                        ['div' => ['class' => 'de1']],
+                            ['span' => ['class' => 'kw1']], 'echo', '/span',
+                            ['span' => ['class' => 're0']], '$foo', '/span',
+                            ['span' => ['class' => 'sy0']], '=', '/span',
+                            ['span' => ['class' => 'st0']], '&quot;foo&quot;', '/span',
+                            ['span' => ['class' => 'sy0']], ';', '/span',
                         '/div',
                     '/li',
                 '/ol',
@@ -209,7 +211,7 @@ class GeshiHelperTest extends TestCase
                 'div' => ['class' => 'code', 'lang' => 'php'],
                     'echo $foo;',
                 '/div',
-            '<p', 'text', '/p'
+            '<p', 'text', '/p',
         ];
         $this->assertHtml($expected, $result);
     }
@@ -228,21 +230,21 @@ class GeshiHelperTest extends TestCase
             '<p', 'This is some text', '/p',
             'a' => ['href' => '#null', 'class' => 'geshi-plain-text'], 'Show Plain Text', '/a',
             ['div' => ['class' => 'code', 'lang' => 'php']],
-                ['ol' => ["class" => "php"]],
-                    ['li' => ['class' => "li1"]],
-                        ["div" => ['class' => "de1"]],
-                            ["span" => ["class" => "kw2"]], '&lt;?php', '/span',
-                            ['span' => ['class' => "kw1"]], 'echo', '/span',
-                            ['span' => ['class' => "re0"]], '$foo', '/span',
-                            ['span' => ['class' => "sy0"]], '=', '/span',
-                            ['span' => ['class' => "st0"]], '&quot;foo&quot;', '/span',
-                            ['span' => ['class' => "sy0"]], ';', '/span',
-                            ['span' => ['class' => "sy1"]], '?&gt;', '/span',
+                ['ol' => ['class' => 'php']],
+                    ['li' => ['class' => 'li1']],
+                        ['div' => ['class' => 'de1']],
+                            ['span' => ['class' => 'kw2']], '&lt;?php', '/span',
+                            ['span' => ['class' => 'kw1']], 'echo', '/span',
+                            ['span' => ['class' => 're0']], '$foo', '/span',
+                            ['span' => ['class' => 'sy0']], '=', '/span',
+                            ['span' => ['class' => 'st0']], '&quot;foo&quot;', '/span',
+                            ['span' => ['class' => 'sy0']], ';', '/span',
+                            ['span' => ['class' => 'sy1']], '?&gt;', '/span',
                         '/div',
                     '/li',
                 '/ol',
             '/div',
-            '<p', 'More text', '/p'
+            '<p', 'More text', '/p',
         ];
         $this->assertHtml($expected, $result);
     }
@@ -251,28 +253,28 @@ class GeshiHelperTest extends TestCase
     {
         // Simple one code block
         $this->geshi->showPlainTextButton = false;
-        $this->geshi->containerMap = array();
+        $this->geshi->containerMap = [];
 
         $text = '<p>This is some text</p><pre lang="php"><?php echo $foo = "foo"; ?></pre><p>More text</p>';
         $result = $this->geshi->highlight($text);
         $expected = [
             '<p', 'This is some text', '/p',
             ['pre' => ['lang' => 'php']],
-                ['ol' => ["class" => "php"]],
-                    ['li' => ['class' => "li1"]],
-                        ["div" => ['class' => "de1"]],
-                            ["span" => ["class" => "kw2"]], '&lt;?php', '/span',
-                            ['span' => ['class' => "kw1"]], 'echo', '/span',
-                            ['span' => ['class' => "re0"]], '$foo', '/span',
-                            ['span' => ['class' => "sy0"]], '=', '/span',
-                            ['span' => ['class' => "st0"]], '&quot;foo&quot;', '/span',
-                            ['span' => ['class' => "sy0"]], ';', '/span',
-                            ['span' => ['class' => "sy1"]], '?&gt;', '/span',
+                ['ol' => ['class' => 'php']],
+                    ['li' => ['class' => 'li1']],
+                        ['div' => ['class' => 'de1']],
+                            ['span' => ['class' => 'kw2']], '&lt;?php', '/span',
+                            ['span' => ['class' => 'kw1']], 'echo', '/span',
+                            ['span' => ['class' => 're0']], '$foo', '/span',
+                            ['span' => ['class' => 'sy0']], '=', '/span',
+                            ['span' => ['class' => 'st0']], '&quot;foo&quot;', '/span',
+                            ['span' => ['class' => 'sy0']], ';', '/span',
+                            ['span' => ['class' => 'sy1']], '?&gt;', '/span',
                         '/div',
                     '/li',
                 '/ol',
             '/pre',
-            '<p', 'More text', '/p'
+            '<p', 'More text', '/p',
         ];
         $this->assertHtml($expected, $result);
     }
@@ -281,13 +283,13 @@ class GeshiHelperTest extends TestCase
     {
         $result = $this->geshi->highlightText("<?php echo 'test';", 'php');
         $expected = [
-            ['ol' => ["class" => "php"]],
-                ['li' => ['class' => "li1"]],
-                    ["div" => ['class' => "de1"]],
-                        ["span" => ["class" => "kw2"]], '&lt;?php', '/span',
-                        ['span' => ['class' => "kw1"]], 'echo', '/span',
-                        ['span' => ['class' => "st_h"]], "'test'", '/span',
-                        ['span' => ['class' => "sy0"]], ';', '/span',
+            ['ol' => ['class' => 'php']],
+                ['li' => ['class' => 'li1']],
+                    ['div' => ['class' => 'de1']],
+                        ['span' => ['class' => 'kw2']], '&lt;?php', '/span',
+                        ['span' => ['class' => 'kw1']], 'echo', '/span',
+                        ['span' => ['class' => 'st_h']], "'test'", '/span',
+                        ['span' => ['class' => 'sy0']], ';', '/span',
                     '/div',
                 '/li',
             '/ol',
@@ -313,20 +315,20 @@ CODE;
                             ['div' => ['class' => 'de1']], 3, '/div',
                         '/td',
                         ['td' => ['class' => 'code-block']],
-                            ["div" => ['class' => "de1"]],
-                                ["span" => ["class" => "kw2"]], '&lt;?php', '/span',
+                            ['div' => ['class' => 'de1']],
+                                ['span' => ['class' => 'kw2']], '&lt;?php', '/span',
                             '/div',
                             ['div' => ['class' => 'de1']],
-                                ['span' => ['class' => "kw1"]], 'echo', '/span',
-                                ['span' => ['class' => "st_h"]], "'test'", '/span',
-                                ['span' => ['class' => "sy0"]], ';', '/span',
+                                ['span' => ['class' => 'kw1']], 'echo', '/span',
+                                ['span' => ['class' => 'st_h']], "'test'", '/span',
+                                ['span' => ['class' => 'sy0']], ';', '/span',
                             '/div',
                             ['div' => ['class' => 'de1']],
-                                ['span' => ['class' => "kw1"]], 'echo', '/span',
-                                ['span' => ['class' => "nu0"]], '1', '/span',
-                                ['span' => ['class' => "sy0"]], '+', '/span',
-                                ['span' => ['class' => "nu0"]], '1', '/span',
-                                ['span' => ['class' => "sy0"]], ';', '/span',
+                                ['span' => ['class' => 'kw1']], 'echo', '/span',
+                                ['span' => ['class' => 'nu0']], '1', '/span',
+                                ['span' => ['class' => 'sy0']], '+', '/span',
+                                ['span' => ['class' => 'nu0']], '1', '/span',
+                                ['span' => ['class' => 'sy0']], ';', '/span',
                             '/div',
                         '/td',
                     '/tr',

@@ -33,8 +33,8 @@
         "geshi/geshi": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8"
+        "phpunit/phpunit": "^8",
+        "cakephp/cakephp-codesniffer": "^4.0"
     },
-    "minimum-stability": "dev",
     "prefer-stable": true
 }

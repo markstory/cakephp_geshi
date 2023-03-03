@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Test suite bootstrap.
  *
@@ -8,8 +10,6 @@
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
-use Cake\Datasource\ConnectionManager;
-use Cake\I18n\I18n;
 
 require_once 'vendor/autoload.php';
 
@@ -43,26 +43,26 @@ Configure::write('App', [
     'cssBaseUrl' => 'css/',
     'paths' => [
         'plugins' => [APP . 'Plugin' . DS],
-        'templates' => [APP . 'Template' . DS]
-    ]
+        'templates' => [APP . 'Template' . DS],
+    ],
 ]);
 
 Cache::setConfig([
     '_cake_core_' => [
         'engine' => 'File',
         'prefix' => 'cake_core_',
-        'serialize' => true
+        'serialize' => true,
     ],
     '_cake_model_' => [
         'engine' => 'File',
         'prefix' => 'cake_model_',
-        'serialize' => true
+        'serialize' => true,
     ],
     'default' => [
         'engine' => 'File',
         'prefix' => 'default_',
-        'serialize' => true
-    ]
+        'serialize' => true,
+    ],
 ]);
 
 Plugin::getCollection()->add(new \Geshi\Plugin());

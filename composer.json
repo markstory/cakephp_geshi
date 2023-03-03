@@ -40,7 +40,7 @@
     "config": {
       "allow-plugins": {
         "cakephp/plugin-installer": true,
-        "dealerdirect/phpcodesniffer-composer-installer": true,
+        "dealerdirect/phpcodesniffer-composer-installer": true
       }
     }
 }

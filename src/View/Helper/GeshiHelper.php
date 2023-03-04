@@ -77,19 +77,6 @@ class GeshiHelper extends Helper
     protected $_geshi = null;
 
     /**
-     * Set the default features if any specified in $helpers
-     *
-     * @param \Cake\View\View $view Cake view
-     * @param array $settings config data
-     * @return void
-     */
-    public function __construct(View $view, array $settings = [])
-    {
-        $this->features = $settings;
-        parent::__construct($view, $settings);
-    }
-
-    /**
      * Magic getter for backwards compatibility with public variables.
      *
      * @param string $name The attribute to read
